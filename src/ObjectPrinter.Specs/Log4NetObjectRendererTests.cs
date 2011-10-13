@@ -9,7 +9,6 @@ using log4net.Util;
 
 namespace ObjectPrinter.Specs
 {
-
 	/// <summary>This fixture will walk through the usage of logging exceptions using the ObjectRenderer</summary>
 	[TestFixture]
 	public class Log4NetObjectRendererTests
