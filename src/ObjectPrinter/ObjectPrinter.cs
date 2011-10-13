@@ -150,6 +150,7 @@ namespace ObjectPrinter
 			singleValue = null;
 			properties = null;
 
+			objectInfo.Inspector = objectInfo.Inspector ?? _config.GetInspector(_obj, _obj.GetType());
 			if (objectInfo.Inspector == null)
 			{
 				singleValue = objectInfo.Value;

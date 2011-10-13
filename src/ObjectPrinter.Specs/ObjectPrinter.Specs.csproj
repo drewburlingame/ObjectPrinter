@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="given_flagged_enum.cs" />
     <Compile Include="Log4NetObjectRendererTests.cs" />
+    <Compile Include="ObjectPrinterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
