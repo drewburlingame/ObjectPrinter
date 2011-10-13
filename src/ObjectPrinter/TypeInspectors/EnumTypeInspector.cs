@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using ObjectPrinter.Utilties;
 
 namespace ObjectPrinter.TypeInspectors
 {
@@ -13,11 +16,19 @@ namespace ObjectPrinter.TypeInspectors
 
 		public IEnumerable<ObjectInfo> GetMemberList(object objectToInspect, Type typeOfObjectToInspect)
 		{
+			var objAsEnum = (Enum)objectToInspect;
+			var allValues = Enum.GetValues(typeOfObjectToInspect);
+
 			return new List<ObjectInfo>
 			       	{
 			       		new ObjectInfo
 			       			{
-			       				Value = typeOfObjectToInspect.Name + "." + Enum.GetName(typeOfObjectToInspect, objectToInspect)
+			       				Value = typeOfObjectToInspect.Name
+			       				        + "."
+			       				        + allValues
+			       				          	.Cast<Enum>()
+			       				          	.Where(objAsEnum.HasFlag)
+			       				          	.JoinToString(" | ")
 			       			}
 			       	};
 		}
