@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+
+  <title>drewburlingame/ObjectPrinter @ GitHub</title>
+
+  <style type="text/css">
+    body {
+      margin-top: 1.0em;
+      background-color: #d4c427;
+      font-family: Helvetica, Arial, FreeSans, san-serif;
+      color: #000000;
+    }
+    #container {
+      margin: 0 auto;
+      width: 700px;
+    }
+    h1 { font-size: 3.8em; color: #2b3bd8; margin-bottom: 3px; }
+    h1 .small { font-size: 0.4em; }
+    h1 a { text-decoration: none }
+    h2 { font-size: 1.5em; color: #2b3bd8; }
+    h3 { text-align: center; color: #2b3bd8; }
+    a { color: #2b3bd8; }
+    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
+    .download { float: right; }
+    pre { background: #000; color: #fff; padding: 15px;}
+    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
+    .footer { text-align:center; padding-top:30px; font-style: italic; }
+  </style>
+</head>
+
+<body>
+  <a href="http://github.com/drewburlingame/ObjectPrinter"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+
+  <div id="container">
+
+    <div class="download">
+      <a href="http://github.com/drewburlingame/ObjectPrinter/zipball/master">
+        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
+      <a href="http://github.com/drewburlingame/ObjectPrinter/tarball/master">
+        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
+    </div>
+
+    <h1><a href="http://github.com/drewburlingame/ObjectPrinter">ObjectPrinter</a>
+      <span class="small">by <a href="http://github.com/drewburlingame">drewburlingame</a></span></h1>
+
+    <div class="description">
+      A C# library for printing an object graph.  Useful for logging the current state of an application.
+    </div>
+
+    <p>ObjectPrinter is the .Net answer for printing an object graph, similar to print in PHP & python.
+
+with a "using ObjectPrinter;" statement, you can use the DumpToString extension method on any object to get a formatted string representation of the object.  The formatting indents every member and puts it on it's own line.
+
+e.g.
+[NullReferenceException]: hashcode { 47242145 }
+{
+    Message : Object reference not set to an instance of an object.
+    StackTrace : at some.project.class.get_Data() in C:\Source\some\project\class.cs:line 103
+    Source : some
+    TargetSite : System.String get_Data()
+    HelpLink : {NULL}
+    Data : 
+	{
+		UserID: 122
+		CompanyID: 15
+	}
+    InnerException : {NULL}
+}
+
+I've found this to be most beneficial in two main areas: 
+1) Capturing context for an exception.  In a typical logging scenario, when capturing context of an exception, you catch the exception, log data and then throw the exception again.  Imagine instead adding the significant state to the ex.Data element to travel with the exception where ever it will be logged.  No more hunting for relevant lines in the logs.  There's a SetContext extension method for Exceptions to make it easy to add objects to the Data member.  The Data member requires all objects being added to be serializable.  If the object you're adding is not serializable, it will be wrapped in a class that can be set to print the object when the exception is serialized.  This prevents the occasional bug from slipping in when you add objects that aren't serializable but forget to test them.  Of course that has never happened on my teams... ever....
+
+2) Inspecting objects from 3rd party libraries.  Every once in a great while, you may find the documentation of a 3rd party library to be wanting.  I know, I know, it rarely happens, but when it does...  Being able to print out an object with data can bring more clarity to the implementation.
+
+Type Inspectors (the tweakability of the ObjectPrinter): 
+ObjectPrinter enumerates a list of inspectors to determine which inspector should be used for a given type.  The chosen inspector then returns a list of members for the ObjectPrinter to print.
+
+An example is the ExceptionTypeInspector which makes sure the base exception properties are always printed in the same order, followed by inherited fields and properties, then the stack trace, and finally the Data dictionary.  This gives a consistent view of exceptions so you'll always know where to look.
+
+The type inspectors can be overridden by setting the ObjectPrinterConfig.GetInspectors delegate.  The default implementation is:
+public static Func<IEnumerable<ITypeInspector>> GetInspectors =
+			() => new List<ITypeInspector>
+			      	{
+			      		new EnumTypeInspector(),
+			      		new ExceptionTypeInspector(),
+					new Log4NetTypeInspector(),
+			      		new MsBuiltInTypeInspector(),
+			      		DefaultTypeInspector
+			      	};
+public static ITypeInspector DefaultTypeInspector = new DefaultTypeInspector();
+
+A type inspector can define a specific type inspector to use for any members it returns.
+
+Another example of a custom type inspector would be for your ORM entities.  The inspector could be smart enough to prevent the entity from lazy loading a property and printing out your entire database.
+</p><h2>Dependencies</h2>
+<p>Machine.Specification
+NUnit
+FluentAssertions
+log4net (required to build, but not required to deploy if you don't use the Log4NetObjectRenderer)</p>
+<h2>Install</h2>
+<p>download the ObjectPrinter.dll and reference it.</p>
+<h2>License</h2>
+<p>MIT License:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+<h2>Authors</h2>
+<p>drewburlingame (drewburlingame@gmail.com)<br/>      </p>
+<h2>Contact</h2>
+<p> (drewburlingame@gmail.com)</p>
+
+
+    <h2>Download</h2>
+    <p>
+      You can download this project in either
+      <a href="http://github.com/drewburlingame/ObjectPrinter/zipball/master">zip</a> or
+      <a href="http://github.com/drewburlingame/ObjectPrinter/tarball/master">tar</a> formats.
+    </p>
+    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
+      by running:
+      <pre>$ git clone git://github.com/drewburlingame/ObjectPrinter</pre>
+    </p>
+
+    <div class="footer">
+      get the source code on GitHub : <a href="http://github.com/drewburlingame/ObjectPrinter">drewburlingame/ObjectPrinter</a>
+    </div>
+
+  </div>
+
+  
+</body>
+</html>
