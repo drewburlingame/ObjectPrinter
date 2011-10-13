@@ -1,6 +1,6 @@
 
 _ReSharper.ObjectPrinter/*
-ObjectPrinter.6.5.TeamCity.user
 */bin/*
 */obj/*
 *.suo
+*.user
