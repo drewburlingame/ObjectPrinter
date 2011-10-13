@@ -32,6 +32,7 @@ namespace ObjectPrinter.Utilties
 				}
 				sb.Append(separator);
 			}
+			sb.Length = sb.Length - separator.Length;
 			return sb.ToString();
 		}
 
