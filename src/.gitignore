@@ -4,3 +4,4 @@ _ReSharper.ObjectPrinter/*
 */obj/*
 *.suo
 *.user
+*.dotCover
