@@ -157,7 +157,10 @@ namespace ObjectPrinter.Specs
 
 		internal class ObjectWithPublicFields
 		{
+#pragma warning disable 0414
 			private string _testString = "Ignored by printer";	// Unused varible needed for tests
+#pragma warning restore 0414
+
 			public int TestInteger;
 			public string TestString;
 
