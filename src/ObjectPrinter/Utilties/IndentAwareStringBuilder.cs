@@ -3,6 +3,10 @@ using System.Text;
 
 namespace ObjectPrinter.Utilties
 {
+	//the interface for this class is embarrassingly bad.  
+	//it was scrapped together late at night just to get the printer working.
+	//i haven't gone back to fix it yet because it works and other issues have been more pressing.
+	//please, please... stop judging me.
 	/// <summary>
 	/// A container for a StringBuilder that keeps track of the tabs that should be added to the beginning of each line.
 	/// This allows classes to append to a string without needing to know how many tabs to append.
