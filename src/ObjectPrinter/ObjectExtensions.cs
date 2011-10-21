@@ -13,5 +13,11 @@
 		{
 			return new ObjectPrinter(obj, tab, newline).Print();
 		}
+
+		///<summary>Uses the ObjectPrinter to loop through the properties of the object, dumping them to a string.</summary>
+		public static string DumpToString(this object obj, IObjectPrinterConfig config)
+		{
+			return new ObjectPrinter(obj, config).Print();
+		}
 	}
 }
