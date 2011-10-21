@@ -7,20 +7,34 @@ namespace ObjectPrinter.TypeInspectors
 {
 	public class DefaultTypeInspector : ITypeInspector
 	{
+		readonly Func<object, Type, bool> _shouldInspectCallback;
+
 		public static BindingFlags DefaultMemberBindingFlags = BindingFlags.Instance
 		                                                         | BindingFlags.Public
 		                                                         | BindingFlags.GetProperty
 		                                                         | BindingFlags.GetField;
 
 		public static bool DefaultIncludeMethods = false;
+		public static bool DefaultIncludeToStringWhenOverridden = true;
 
-		protected virtual BindingFlags MemberBindingFlags { get { return DefaultMemberBindingFlags; } }
-		protected bool IncludeMethods { get { return DefaultIncludeMethods; } }
-		protected bool IncludeToStringWhenOverridden { get { return true; } }
+		public BindingFlags MemberBindingFlags { get; set; }
+		public bool IncludeMethods { get; set; }
+		public bool IncludeToStringWhenOverridden { get; set; }
+
+		public DefaultTypeInspector() : this(null)
+		{
+		}
+		public DefaultTypeInspector(Func<object, Type, bool> shouldInspectCallback)
+		{
+			_shouldInspectCallback = shouldInspectCallback;
+			MemberBindingFlags = DefaultMemberBindingFlags;
+			IncludeMethods = DefaultIncludeMethods;
+			IncludeToStringWhenOverridden = DefaultIncludeToStringWhenOverridden;
+		}
 
 		public virtual bool ShouldInspect(object objectToInspect, Type typeOfObjectToInspect)
 		{
-			return true;
+			return _shouldInspectCallback == null || _shouldInspectCallback(objectToInspect, typeOfObjectToInspect);
 		}
 
 		public virtual IEnumerable<ObjectInfo> GetMemberList(object objectToInspect, Type typeOfObjectToInspect)
