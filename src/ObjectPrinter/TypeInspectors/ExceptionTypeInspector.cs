@@ -8,7 +8,7 @@ namespace ObjectPrinter.TypeInspectors
 	/// <summary>
 	/// Returns properties in a well known order to make it easier to scan the data
 	/// </summary>
-	public class ExceptionTypeInspector : DefaultTypeInspector
+	public class ExceptionTypeInspector : InspectAllTypeInspector
 	{
 		public override bool ShouldInspect(object objectToInspect, Type typeOfObjectToInspect)
 		{

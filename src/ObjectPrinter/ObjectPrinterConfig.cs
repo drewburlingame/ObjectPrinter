@@ -8,7 +8,7 @@ namespace ObjectPrinter
 {
 	public class ObjectPrinterConfig : IObjectPrinterConfig
 	{
-		public static ITypeInspector DefaultTypeInspector = new DefaultTypeInspector();
+		public static ITypeInspector DefaultTypeInspector = new InspectAllTypeInspector();
 
 		public static string DefaultTab = "\t";
 		public static string DefaultNewLine = Environment.NewLine;
@@ -23,7 +23,7 @@ namespace ObjectPrinter
 			      		new EnumTypeInspector(),
 			      		new ExceptionTypeInspector(),
 						new Log4NetTypeInspector(),
-			      		new MsBuiltInTypeInspector(),
+			      		new IgnoreMsBuiltInTypesTypeInspector(),
 			      		DefaultTypeInspector
 			      	};
 

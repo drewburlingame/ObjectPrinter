@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace ObjectPrinter.TypeInspectors
 {
-	public class DefaultTypeInspector : ITypeInspector
+	public class InspectAllTypeInspector : ITypeInspector
 	{
 		readonly Func<object, Type, bool> _shouldInspectCallback;
 
@@ -21,10 +21,10 @@ namespace ObjectPrinter.TypeInspectors
 		public bool IncludeMethods { get; set; }
 		public bool IncludeToStringWhenOverridden { get; set; }
 
-		public DefaultTypeInspector() : this(null)
+		public InspectAllTypeInspector() : this(null)
 		{
 		}
-		public DefaultTypeInspector(Func<object, Type, bool> shouldInspectCallback)
+		public InspectAllTypeInspector(Func<object, Type, bool> shouldInspectCallback)
 		{
 			_shouldInspectCallback = shouldInspectCallback;
 			MemberBindingFlags = DefaultMemberBindingFlags;
