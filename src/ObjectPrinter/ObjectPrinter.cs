@@ -15,7 +15,7 @@ namespace ObjectPrinter
 		/// <summary>The default config to use.</summary>
 		public static Func<IObjectPrinterConfig> GetDefaultContext = () => new ObjectPrinterConfig();
 
-		private readonly object _obj;
+		private readonly object _rootObject;
 		private readonly IndentAwareStringBuilder _sb;
 		private readonly IObjectPrinterConfig _config;
 		private int _currentDepth = -1;
@@ -33,7 +33,7 @@ namespace ObjectPrinter
 
 		public ObjectPrinter(object obj, IObjectPrinterConfig config)
 		{
-			_obj = obj;
+			_rootObject = obj;
 			_config = config;
 			_sb = new IndentAwareStringBuilder(config.Tab, config.NewLine);
 		}
@@ -42,7 +42,7 @@ namespace ObjectPrinter
 		{
 			try
 			{
-				AppendObject(new ObjectInfo {Value = _obj, Inspector = _config.GetInspector(_obj, _obj.GetType())});
+				AppendObject(new ObjectInfo {Value = _rootObject, Inspector = _config.GetInspector(_rootObject, _rootObject.GetType())});
 			}
 			catch (Exception e)
 			{
@@ -154,7 +154,7 @@ namespace ObjectPrinter
 			singleValue = null;
 			properties = null;
 
-			objectInfo.Inspector = objectInfo.Inspector ?? _config.GetInspector(_obj, _obj.GetType());
+			objectInfo.Inspector = objectInfo.Inspector ?? _config.GetInspector(objectInfo.Value, objectInfo.Type);
 			if (objectInfo.Inspector == null)
 			{
 				singleValue = objectInfo.Value;
