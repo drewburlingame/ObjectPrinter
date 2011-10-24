@@ -129,6 +129,10 @@ namespace ObjectPrinter
 				else
 				{
 					_sb.Append("[" + typeOfOjbToAppend.Name + "]: hashcode { " + objToAppend.GetHashCode() + " }");
+					if (_config.IncludeLogging)
+					{
+						_sb.Append(" - Inspector { " + objectInfo.Inspector.GetType().Name + " } ");
+					}
 					AppendProperties(properties);
 				}
 			}

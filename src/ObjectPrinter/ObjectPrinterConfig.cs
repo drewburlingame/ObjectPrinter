@@ -12,6 +12,7 @@ namespace ObjectPrinter
 
 		public static string DefaultTab = "\t";
 		public static string DefaultNewLine = Environment.NewLine;
+		public static bool DefaultIncludeLogging = false;
 
 		/// <summary>
 		/// Delegate to return the inspectors to use and the order to use them in.
@@ -30,6 +31,7 @@ namespace ObjectPrinter
 		public string Tab { get; set; }
 		public string NewLine { get; set; }
 		public int MaxDepth { get; set; }
+		public bool IncludeLogging { get; set; }
 
 		/// <summary>
 		/// The type inspectors to be used during the printing of an object.
@@ -42,6 +44,7 @@ namespace ObjectPrinter
 			Tab = DefaultTab;
 			NewLine = DefaultNewLine;
 			MaxDepth = 10;
+			IncludeLogging = DefaultIncludeLogging;
 			Inspectors = GetInspectors();
 		}
 

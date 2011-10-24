@@ -13,6 +13,17 @@ namespace ObjectPrinter.Specs
 	[TestFixture]
 	public class Log4NetObjectRendererTests
 	{
+		[TestFixtureSetUp]
+		public void FixtureSetup()
+		{
+			ObjectPrinterConfig.DefaultIncludeLogging = true;
+		}
+		[TestFixtureTearDown]
+		public void FixtureTearDown()
+		{
+			ObjectPrinterConfig.DefaultIncludeLogging = false;
+		}
+
 		[Test]
 		public void When_object_is_from_log4net_should_call_to_string()
 		{
