@@ -17,7 +17,18 @@ namespace ObjectPrinter.TypeInspectors
 		public IEnumerable<ObjectInfo> GetMemberList(object objectToInspect, Type typeOfObjectToInspect)
 		{
 			var objAsEnum = (Enum)objectToInspect;
-			var allValues = Enum.GetValues(typeOfObjectToInspect);
+			string enumValues;
+
+			var isFlagEnum = typeOfObjectToInspect.GetCustomAttributes(typeof (FlagsAttribute), false).Any(a => true);
+			if(isFlagEnum)
+			{
+				var allValues = Enum.GetValues(typeOfObjectToInspect);
+				enumValues = allValues.Cast<Enum>().Where(objAsEnum.HasFlag).JoinToString(" | ");
+			}
+			else
+			{
+				enumValues = objectToInspect.ToString();
+			}
 
 			return new List<ObjectInfo>
 			       	{
@@ -25,10 +36,7 @@ namespace ObjectPrinter.TypeInspectors
 			       			{
 			       				Value = typeOfObjectToInspect.Name
 			       				        + "."
-			       				        + allValues
-			       				          	.Cast<Enum>()
-			       				          	.Where(objAsEnum.HasFlag)
-			       				          	.JoinToString(" | ")
+			       				        + enumValues
 			       			}
 			       	};
 		}
