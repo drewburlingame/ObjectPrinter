@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml;
+using System.Xml.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -8,6 +11,25 @@ namespace ObjectPrinter.Specs
 	[TestFixture]
 	public class ObjectPrinterTests
 	{
+		[Test]
+		public void SmokeTest_XmlNode_should_return_inner_text()
+		{
+			var xml = "<bus:exception xmlns:bus=\"http://developer.cognos.com/schemas/bibus/3/\"><severity>error</severity><errorCode>cmBadProp</errorCode><bus:message><messageString>CM-REQ-4010 The property \"mobileDeviceID\" is unknown. Remove it or replace it with a valid property.</messageString></bus:message></bus:exception>";
+			var doc = new XmlDocument();
+			doc.LoadXml(xml);
+			var output = doc.DumpToString();
+			output.Should().Be(xml);
+		}
+
+		[Test]
+		public void SmokeTest_XNode_should_return_inner_text()
+		{
+			var xml = "<bus:exception xmlns:bus=\"http://developer.cognos.com/schemas/bibus/3/\">  <severity>error</severity>  <errorCode>cmBadProp</errorCode>  <bus:message>    <messageString>CM-REQ-4010 The property \"mobileDeviceID\" is unknown. Remove it or replace it with a valid property.</messageString>  </bus:message></bus:exception>";
+			var doc = XElement.Load(new StringReader(xml));
+			var output = doc.DumpToString();
+			output.Should().Be(xml);
+		}
+
 		[Test]
 		public void SmokeTest_general_use_case_including_recursion()
 		{

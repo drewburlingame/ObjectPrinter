@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Xml;
+using System.Xml.Linq;
 using ObjectPrinter.TypeInspectors;
 using ObjectPrinter.Utilties;
 
@@ -105,7 +107,11 @@ namespace ObjectPrinter
 
 			_objsAlreadyAppended.Add(objToAppend);
 
-			if (objToAppend is IDictionary)
+			if (objToAppend is XmlNode)
+			{
+				_sb.Append(((XmlNode)objToAppend).InnerXml);
+			}
+			else if (objToAppend is IDictionary)
 			{
 				AppendDictionary((IDictionary)objToAppend);
 			}
