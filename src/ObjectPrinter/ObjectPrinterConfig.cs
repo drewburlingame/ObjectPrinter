@@ -24,7 +24,7 @@ namespace ObjectPrinter
 			      		new EnumTypeInspector(),
 			      		new ExceptionTypeInspector(),
 						new Log4NetTypeInspector(),
-			      		new IgnoreMsBuiltInTypesTypeInspector(),
+			      		new ToStringTypeInspector { ShouldInspectType = Funcs.IncludeMsBuiltInNamespaces },
 			      		DefaultTypeInspector
 			      	};
 

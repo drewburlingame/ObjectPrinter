@@ -12,7 +12,8 @@ namespace ObjectPrinter.TypeInspectors
 	{
 		public override bool ShouldInspect(object objectToInspect, Type typeOfObjectToInspect)
 		{
-			return typeof(Exception).IsAssignableFrom(typeOfObjectToInspect);
+			return base.ShouldInspect(objectToInspect, typeOfObjectToInspect)
+			       && Funcs.IsException(objectToInspect, typeOfObjectToInspect);
 		}
 
 		public override IEnumerable<ObjectInfo> GetMemberList(object objectToInspect, Type typeOfObjectToInspect)

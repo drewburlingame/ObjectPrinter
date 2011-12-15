@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FuncsTests.cs" />
     <Compile Include="given_flagged_enum.cs" />
     <Compile Include="Log4NetObjectRendererTests.cs" />
     <Compile Include="ObjectPrinterTests.cs" />

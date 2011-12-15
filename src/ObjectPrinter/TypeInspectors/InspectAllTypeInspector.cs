@@ -7,7 +7,14 @@ namespace ObjectPrinter.TypeInspectors
 {
 	public class InspectAllTypeInspector : ITypeInspector
 	{
-		readonly Func<object, Type, bool> _shouldInspectCallback;
+		/// <summary>If ShouldInspectType returns true, this inspector will handle the type</summary>
+		public Func<object, Type, bool> ShouldInspectType { get; set; }
+
+		/// <summary>If ShouldEvaluateMember returns true, the value will be evaluated for the member</summary>
+		public Func<object, MemberInfo, bool> ShouldEvaluateMember { get; set; }
+
+		/// <summary>If ShouldIncludeMember returns true (after value is evaluated), the member will be printed out</summary>
+		public Func<object, ObjectInfo, bool> ShouldIncludeMember { get; set; }
 
 		public static BindingFlags DefaultMemberBindingFlags = BindingFlags.Instance
 		                                                         | BindingFlags.Public
@@ -21,12 +28,8 @@ namespace ObjectPrinter.TypeInspectors
 		public bool IncludeMethods { get; set; }
 		public bool IncludeToStringWhenOverridden { get; set; }
 
-		public InspectAllTypeInspector() : this(null)
+		public InspectAllTypeInspector()
 		{
-		}
-		public InspectAllTypeInspector(Func<object, Type, bool> shouldInspectCallback)
-		{
-			_shouldInspectCallback = shouldInspectCallback;
 			MemberBindingFlags = DefaultMemberBindingFlags;
 			IncludeMethods = DefaultIncludeMethods;
 			IncludeToStringWhenOverridden = DefaultIncludeToStringWhenOverridden;
@@ -34,7 +37,17 @@ namespace ObjectPrinter.TypeInspectors
 
 		public virtual bool ShouldInspect(object objectToInspect, Type typeOfObjectToInspect)
 		{
-			return _shouldInspectCallback == null || _shouldInspectCallback(objectToInspect, typeOfObjectToInspect);
+			return ShouldInspectType == null || ShouldInspectType(objectToInspect, typeOfObjectToInspect);
+		}
+
+		protected virtual bool ShouldEvaluate(object instance, MemberInfo member)
+		{
+			return ShouldEvaluateMember == null || ShouldEvaluateMember(instance, member);
+		}
+
+		protected virtual bool ShouldInclude(object instance, ObjectInfo info)
+		{
+			return ShouldIncludeMember == null || ShouldIncludeMember(instance, info);
 		}
 
 		public virtual IEnumerable<ObjectInfo> GetMemberList(object objectToInspect, Type typeOfObjectToInspect)
@@ -55,51 +68,57 @@ namespace ObjectPrinter.TypeInspectors
 
 			members.AddRange(
 				type.GetProperties(bindingFlags)
+					.Where(m => ShouldEvaluate(objectToInspect, m))
 					.Select(p => new ObjectInfo
 					             	{
 					             		Name = p.Name,
-					             		Value = ParsePropertyInfo(p, objectToInspect),
+					             		Value = ParsePropertyInfo(objectToInspect, p),
 					             		Inspector = null
-					             	})
+									})
+					.Where(o => ShouldInclude(objectToInspect, o))
 				);
 
 			members.AddRange(
 				type.GetFields(bindingFlags)
+					.Where(m => ShouldEvaluate(objectToInspect, m))
 					.Select(f => new ObjectInfo
 					             	{
 					             		Name = f.Name,
-					             		Value = ParseFieldInfo(f, objectToInspect),
+					             		Value = ParseFieldInfo(objectToInspect, f),
 					             		Inspector = null
-					             	})
+									})
+					.Where(o => ShouldInclude(objectToInspect, o))
 				);
 
 			if (IncludeMethods)
 			{
 				members.AddRange(
 					type.GetMethods(bindingFlags)
-						.Select(m => new ObjectInfo
-						             	{
-						             		Name = m.Name,
-						             		Value = ParseMethodInfo(m, objectToInspect),
-						             		Inspector = null
-						             	})
+					.Where(m => ShouldEvaluate(objectToInspect, m))
+					.Select(m => new ObjectInfo
+						            {
+						             	Name = m.Name,
+						             	Value = ParseMethodInfo(objectToInspect, m),
+						             	Inspector = null
+						            })
+					.Where(o => ShouldInclude(objectToInspect, o))
 					);
 			}
 
 			return members;
 		}
 
-		protected virtual object ParseMethodInfo(MethodInfo methodInfo, object objectToInspect)
+		protected virtual object ParseMethodInfo(object objectToInspect, MethodInfo methodInfo)
 		{
 			return methodInfo.ToString();
 		}
 
-		protected virtual object ParseFieldInfo(FieldInfo fieldInfo, object objectToInspect)
+		protected virtual object ParseFieldInfo(object objectToInspect, FieldInfo fieldInfo)
 		{
 			return ParseObjectValue(() => fieldInfo.GetValue(objectToInspect));
 		}
 
-		protected virtual object ParsePropertyInfo(PropertyInfo property, object instance)
+		protected virtual object ParsePropertyInfo(object instance, PropertyInfo property)
 		{
 			return ParseObjectValue(() => property.GetValue(instance, null));
 		}

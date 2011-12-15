@@ -48,7 +48,7 @@
     <Compile Include="ExceptionExtensions.cs" />
     <Compile Include="NonSerializableWrapper.cs" />
     <Compile Include="ObjectExtensions.cs" />
-    <Compile Include="TypeInspectors\IgnoreNamespacesTypeInspector.cs" />
+    <Compile Include="TypeInspectors\Funcs.cs" />
     <Compile Include="TypeInspectors\ITypeInspector.cs" />
     <Compile Include="Log4Net\Log4NetObjectRenderer.cs" />
     <Compile Include="Log4Net\Log4NetTypeInspector.cs" />
@@ -59,7 +59,6 @@
     <Compile Include="TypeInspectors\InspectAllTypeInspector.cs" />
     <Compile Include="TypeInspectors\EnumTypeInspector.cs" />
     <Compile Include="TypeInspectors\ExceptionTypeInspector.cs" />
-    <Compile Include="TypeInspectors\IgnoreMsBuiltInTypesTypeInspector.cs" />
     <Compile Include="TypeInspectors\ToStringTypeInspector.cs" />
     <Compile Include="TypeInspectors\TypeInspectorExtensions.cs" />
     <Compile Include="Utilties\EnumerableExtensions.cs" />
