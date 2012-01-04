@@ -20,6 +20,12 @@ namespace ObjectPrinter.Log4Net
 				return;
 			}
 
+			if (obj is LazyStringDelegate)
+			{
+				writer.Write(obj.ToString());
+				return;
+			}
+
 			var ns = obj.GetType().Namespace;
 			if (!string.IsNullOrEmpty(ns) && (ns.StartsWith("log4net") || ns.StartsWith("Common.Logging")))
 			{

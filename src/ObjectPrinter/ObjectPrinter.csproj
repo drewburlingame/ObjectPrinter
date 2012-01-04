@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="IObjectPrinterConfig.cs" />
     <Compile Include="ExceptionExtensions.cs" />
+    <Compile Include="LazyStringDelegate.cs" />
     <Compile Include="NonSerializableWrapper.cs" />
     <Compile Include="ObjectExtensions.cs" />
     <Compile Include="TypeInspectors\Funcs.cs" />

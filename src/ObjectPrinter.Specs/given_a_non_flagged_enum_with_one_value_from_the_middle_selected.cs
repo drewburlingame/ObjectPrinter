@@ -23,11 +23,7 @@ namespace ObjectPrinter.Specs
 		             		Console.Out.WriteLine(_output);
 		             	};
 
-		It should_not_print_Val1 = () => _output.ShouldNotContain("Val1");
-		It should_print_Val2 = () => _output.ShouldContain("Val2");
-		It should_not_print_Val3 = () => _output.ShouldNotContain("Val3");
-		It should_not_print_namespace = () => _output.ShouldNotContain("ObjectPrinter.Specs");
-		It should_print_enum_type_name = () => _output.ShouldContain("ImFlagged");
+		It should_print_ImNotFlaggedDotVal2 = () => _output.ShouldEqual("ImNotFlagged.Val2");
 
 		static ImNotFlagged _value;
 		static string _output;
