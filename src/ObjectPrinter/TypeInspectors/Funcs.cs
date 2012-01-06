@@ -16,6 +16,11 @@ namespace ObjectPrinter.TypeInspectors
 			get { return IncludeNamespaces("System", "Microsoft"); }
 		}
 
+		public static Func<object, Type, bool> ExcludeMsBuiltInNamespaces
+		{
+			get { return ExcludeNamespaces("System", "Microsoft"); }
+		}
+
 		public static Func<object, Type, bool> IncludeNamespaces(params string[] namespaces)
 		{
 			if (namespaces.IsNullOrEmpty())
@@ -30,11 +35,6 @@ namespace ObjectPrinter.TypeInspectors
 			}
 
 			return (o, type) => namespaces.Any(ns => IsTheNamespaceYoureLookingFor(ns, type));
-		}
-
-		public static Func<object, Type, bool> ExcludeMsBuiltInNamespaces
-		{
-			get { return ExcludeNamespaces("System", "Microsoft"); }
 		}
 
 		public static Func<object, Type, bool> ExcludeNamespaces(params string[] namespaces)
@@ -56,6 +56,41 @@ namespace ObjectPrinter.TypeInspectors
 		static bool IsTheNamespaceYoureLookingFor(string ns, Type type)
 		{
 			return string.IsNullOrEmpty(type.Namespace) ? ns == string.Empty : type.Namespace.StartsWith(ns);
+		}
+
+		public static Func<object, Type, bool> IncludeTypes(bool inherit, params Type[] types)
+		{
+			if (types.IsNullOrEmpty())
+			{
+				throw new ArgumentException("types cannot be null or empty");
+			}
+
+			if (types.Length == 1) //optimization
+			{
+				return (o, type) => IsTheTypeYoureLookingFor(types[0], type, inherit);
+			}
+
+			return (o, type) => types.Any(t => IsTheTypeYoureLookingFor(t, type, inherit));
+		}
+
+		public static Func<object, Type, bool> ExcludeTypes(bool inherit, params Type[] types)
+		{
+			if (types.IsNullOrEmpty())
+			{
+				throw new ArgumentException("types cannot be null or empty");
+			}
+
+			if (types.Length == 1) //optimization
+			{
+				return (o, type) => !IsTheTypeYoureLookingFor(types[0], type, inherit);
+			}
+
+			return (o, type) => !types.Any(t => IsTheTypeYoureLookingFor(t, type, inherit));
+		}
+
+		static bool IsTheTypeYoureLookingFor(Type typeToFind, Type type, bool inherit)
+		{
+			return inherit ? typeToFind == type : typeToFind.IsAssignableFrom(type);
 		}
 
 		public static Func<object, ObjectInfo, bool> ExcludeNullMembers
