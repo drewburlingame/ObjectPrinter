@@ -14,12 +14,15 @@ namespace ObjectPrinter
 		public static string DefaultNewLine = Environment.NewLine;
 		public static bool DefaultIncludeLogging = false;
 
-		/// <summary>
-		/// Delegate to return the inspectors to use and the order to use them in.
-		/// Change this at runtime to update the inspectors used and their order.
-		/// </summary>
-		public static Func<IEnumerable<ITypeInspector>> GetInspectors =
-			() => new List<ITypeInspector>
+		private static ITypeInspector[] _inspectorsWithAllTypesInspected = new ITypeInspector[]
+		            {
+		                new EnumTypeInspector(),
+		                new ExceptionTypeInspector(),
+		                new Log4NetTypeInspector(),
+		                DefaultTypeInspector
+		            };
+
+		private static ITypeInspector[] _inspectorsWithMsTypesToStringed = new ITypeInspector[]
 			      	{
 			      		new EnumTypeInspector(),
 			      		new ExceptionTypeInspector(),
@@ -27,6 +30,22 @@ namespace ObjectPrinter
 			      		new ToStringTypeInspector { ShouldInspectType = Funcs.IncludeMsBuiltInNamespaces },
 			      		DefaultTypeInspector
 			      	};
+
+		public static IEnumerable<ITypeInspector> InspectorsWithAllTypesInspected
+		{
+			get { return _inspectorsWithAllTypesInspected; }
+		}
+
+		public static IEnumerable<ITypeInspector> InspectorsWithMsTypesToStringed
+		{
+			get { return _inspectorsWithMsTypesToStringed; }
+		}
+
+		/// <summary>
+		/// Delegate to return the inspectors to use and the order to use them in.
+		/// Change this at runtime to update the inspectors used and their order.
+		/// </summary>
+		public static Func<IEnumerable<ITypeInspector>> GetInspectors = () => InspectorsWithMsTypesToStringed;
 
 		public string Tab { get; set; }
 		public string NewLine { get; set; }
