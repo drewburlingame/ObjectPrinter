@@ -24,10 +24,11 @@ namespace ObjectPrinter.Specs
 		[Test]
 		public void SmokeTest_XNode_should_return_inner_text()
 		{
-			var xml = "<bus:exception xmlns:bus=\"http://developer.cognos.com/schemas/bibus/3/\">  <severity>error</severity>  <errorCode>cmBadProp</errorCode>  <bus:message>    <messageString>CM-REQ-4010 The property \"mobileDeviceID\" is unknown. Remove it or replace it with a valid property.</messageString>  </bus:message></bus:exception>";
+            var xml = "<bus:exception xmlns:bus=\"http://developer.cognos.com/schemas/bibus/3/\">\r\n  <severity>error</severity>\r\n  <errorCode>cmBadProp</errorCode>\r\n  <bus:message>\r\n    <messageString>CM-REQ-4010 The property \"mobileDeviceID\" is unknown. Remove it or replace it with a valid property.</messageString>\r\n  </bus:message>\r\n</bus:exception>";
 			var doc = XElement.Load(new StringReader(xml));
 			var output = doc.DumpToString();
 			output.Should().Be(xml);
+		    //Console.Out.WriteLine(output);
 		}
 
 		[Test]
@@ -40,7 +41,8 @@ namespace ObjectPrinter.Specs
 							};
 			var child2 = new ObjectPrintable
 							{
-								String = "Child 2",
+								String = @"Child 2
+is crazy",
 								Id = 2
 							};
 
@@ -86,6 +88,7 @@ namespace ObjectPrinter.Specs
 		2 : [ObjectPrintable]: hashcode { 2 }
 		{
 			String : Child 2
+				is crazy
 			Id : 2
 			ObjectPrintableChild : {NULL}
 			ObjectPrintableParent : avoid circular loop for this [ObjectPrintable]: hashcode { 100 }
@@ -107,6 +110,7 @@ namespace ObjectPrinter.Specs
 		[ObjectPrintable]: hashcode { 2 }
 		{
 			String : Child 2
+				is crazy
 			Id : 2
 			ObjectPrintableChild : {NULL}
 			ObjectPrintableParent : avoid circular loop for this [ObjectPrintable]: hashcode { 100 }
@@ -114,15 +118,14 @@ namespace ObjectPrinter.Specs
 			ObjectPrintableArray : {NULL}
 		}
 	}
-}
-";
+}";
 			//replace tabs & newlines to easily compare white spaces
 //			expected = expected.Replace(Environment.NewLine, "_n").Replace("\t", "_t");
 //			actual = actual.Replace(Environment.NewLine, "_n").Replace("\t", "_t");
 //			Console.Out.WriteLine(expected);
-			Console.Out.WriteLine(actual);
-			Console.Out.WriteLine(actual.Length);
-			Console.Out.WriteLine(expected.Length);
+//			Console.Out.WriteLine(actual);
+//			Console.Out.WriteLine(actual.Length);
+//			Console.Out.WriteLine(expected.Length);
 			actual.Should().Be(expected);
 		}
 
@@ -143,8 +146,7 @@ namespace ObjectPrinter.Specs
 	Id : 100
 	TestInteger : 25
 	TestString : This is a test
-}
-");
+}");
 		}
 
 		public class ObjectPrintable

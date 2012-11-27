@@ -5,7 +5,7 @@ using ObjectPrinter.TypeInspectors;
 
 namespace ObjectPrinter.Specs
 {
-	[TestFixture]
+    [TestFixture]
 	public class FuncsTests
 	{
 		[Test]

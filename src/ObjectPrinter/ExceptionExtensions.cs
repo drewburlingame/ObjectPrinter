@@ -23,7 +23,7 @@ namespace ObjectPrinter
 		{
 			if (!e.Data.Contains(CacheKey))
 			{
-				var output = new ObjectPrinter(e, tab, newline).Print();
+				var output = new ObjectPrinter(e, tab, newline).PrintToString();
 				e.Data[CacheKey] = output;
 			}
 			return (string)e.Data[CacheKey];

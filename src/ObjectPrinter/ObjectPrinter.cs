@@ -2,9 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
-using System.Xml.Linq;
 using ObjectPrinter.TypeInspectors;
 using ObjectPrinter.Utilties;
 
@@ -17,41 +18,61 @@ namespace ObjectPrinter
 		/// <summary>The default config to use.</summary>
 		public static Func<IObjectPrinterConfig> GetDefaultContext = () => new ObjectPrinterConfig();
 
-		private readonly object _rootObject;
-		private readonly IndentAwareStringBuilder _sb;
-		private readonly IObjectPrinterConfig _config;
+        private readonly object _rootObject;
+        private readonly IObjectPrinterConfig _config;
+        private string _tab;
+        private string _newline;
+
+        private IndentableTextWriter _output;
+
 		private int _currentDepth = -1;
 		private readonly List<object> _objsAlreadyAppended = new List<object>();
 
-		public ObjectPrinter(object obj)
+	    public ObjectPrinter(object obj)
 			: this(obj, GetDefaultContext())
 		{
 		}
 
 		public ObjectPrinter(object obj, string tab, string newline)
-			: this(obj, new ObjectPrinterConfig { Tab = tab, NewLine = newline })
+			: this(obj, GetDefaultContext(), tab, newline)
 		{
 		}
 
 		public ObjectPrinter(object obj, IObjectPrinterConfig config)
+            : this(obj, config, config.Tab, config.NewLine)
 		{
-			_rootObject = obj;
-			_config = config;
-			_sb = new IndentAwareStringBuilder(config.Tab, config.NewLine);
 		}
 
-		public string Print()
-		{
+        private ObjectPrinter(object obj, IObjectPrinterConfig config, string tab, string newline)
+        {
+            _rootObject = obj;
+            _config = config;
+            _tab = tab;
+            _newline = newline;
+        }
+
+        public void PrintTo(TextWriter output)
+        {
+            _output = new IndentableTextWriter(output, _tab, _newline);
+            WriteObject(new ObjectInfo { Value = _rootObject, Inspector = _config.GetInspector(_rootObject, _rootObject.GetType()) });
+        }
+
+	    public string PrintToString()
+        {
+            var sb = new StringBuilder();
 			try
-			{
-				AppendObject(new ObjectInfo {Value = _rootObject, Inspector = _config.GetInspector(_rootObject, _rootObject.GetType())});
+            {
+                using (var sw = new StringWriter(sb))
+                {
+                    PrintTo(sw);
+                }
 			}
 			catch (Exception e)
 			{
 				string partialOutput;
 				try
 				{
-					partialOutput = _sb.ToString();
+					partialOutput = sb.ToString();
 				}
 				catch (Exception exception)
 				{
@@ -60,27 +81,27 @@ namespace ObjectPrinter
 				e.Data["ObjectPrinter Partial Output"] = partialOutput;
 				throw;
 			}
-			return _sb.ToString();
+			return sb.ToString();
 		}
 
-		private void AppendObject(ObjectInfo objectInfo)
+		private void WriteObject(ObjectInfo objectInfo)
 		{
 			_currentDepth++;
-			AppendObjectImpl(objectInfo);
+			WriteObjectImpl(objectInfo);
 			_currentDepth--;
 		}
 
-		private void AppendObjectImpl(ObjectInfo objectInfo)
+		private void WriteObjectImpl(ObjectInfo objectInfo)
 		{
 			//Assumption: the label has already been printed on the line.
-			//            if you _sb.AppendLine, the value will not appear
+			//            if you _output.WriteLine, the value will not appear
 			//            on same line as the label
 
 			var objToAppend = objectInfo.Value;
 
 			if (objToAppend == null)
 			{
-				_sb.Append(NullValue);
+				_output.Write(NullValue);
 				return;
 			}
 
@@ -91,14 +112,14 @@ namespace ObjectPrinter
 			//		because ReferenceEquals will box the value type and thus never have the same reference
 			if (_objsAlreadyAppended.Any(o => ReferenceEquals(objToAppend, o)))
 			{
-				_sb.Append("avoid circular loop for this [" + typeOfOjbToAppend.Name + "]: hashcode { " + objToAppend.GetHashCode() + " }");
+				_output.Write("avoid circular loop for this [" + typeOfOjbToAppend.Name + "]: hashcode { " + objToAppend.GetHashCode() + " }");
 				return;
 			}
 
 			//Avoid StackOverflow caused by objects like ConfigurationException.Errors
 			if (_currentDepth >= _config.MaxDepth)
 			{
-				_sb.Append("Maximum recursion depth reached");
+				_output.Write("Maximum recursion depth reached");
 				return;
 			}
 
@@ -109,7 +130,7 @@ namespace ObjectPrinter
 
 			if (objToAppend is XmlNode)
 			{
-				_sb.Append(((XmlNode)objToAppend).InnerXml);
+				_output.Write(((XmlNode)objToAppend).InnerXml);
 			}
 			else if (objToAppend is IDictionary)
 			{
@@ -130,14 +151,14 @@ namespace ObjectPrinter
 
 				if (TryGetSingleValue(objectInfo, out singleValue, out properties))
 				{
-					_sb.Append(singleValue ?? NullValue);
+					_output.Write(singleValue ?? NullValue);
 				}
 				else
 				{
-					_sb.Append("[" + typeOfOjbToAppend.Name + "]: hashcode { " + objToAppend.GetHashCode() + " }");
+					_output.Write("[" + typeOfOjbToAppend.Name + "]: hashcode { " + objToAppend.GetHashCode() + " }");
 					if (_config.IncludeLogging)
 					{
-						_sb.Append(" - Inspector { " + objectInfo.Inspector.GetType().Name + " } ");
+						_output.Write(" - Inspector { " + objectInfo.Inspector.GetType().Name + " } ");
 					}
 					AppendProperties(properties);
 				}
@@ -175,34 +196,51 @@ namespace ObjectPrinter
 			}
 
 			return false;
-		}
+        }
+
+
+        private void WriteEmptyChildren()
+        {
+            _output.WriteLine("{}");
+        }
+
+        private void StartChildWrapper()
+        {
+            _output.WriteLine();
+            _output.WriteLine("{");
+            _output.Indent();
+        }
+
+        private void EndChildWrapper()
+        {
+            _output.Outdent();
+            //no need to writeline because the object itself will 
+            _output.Write("}");
+        }
 
 		private void AppendProperties(List<ObjectInfo> objectInfos)
 		{
 			if (objectInfos.IsNullOrEmpty())
 			{
-				_sb.EndLineWith("{}");
-				return;
+			    WriteEmptyChildren();
+			    return;
 			}
 
-			_sb.EndLine();
-			_sb.AppendLine("{");
-			_sb.IncrementTabDepth();
+		    StartChildWrapper();
 
-			foreach (var objectInfo in objectInfos)
+		    foreach (var objectInfo in objectInfos)
 			{
 				AppendValue(objectInfo);
 			}
 
-			_sb.DecrementTabDepth();
-			_sb.AppendLine("}");
+			EndChildWrapper();
 		}
 
-		private void AppendEnumerable(IEnumerable objToAppend)
+	    private void AppendEnumerable(IEnumerable objToAppend)
 		{
 			if (objToAppend == null)
 			{
-				_sb.EndLineWith("{}");
+                WriteEmptyChildren();
 				return;
 			}
 
@@ -214,21 +252,18 @@ namespace ObjectPrinter
 				if (countIsZero)
 				{
 					countIsZero = false;
-					_sb.EndLine();
-					_sb.AppendLine("{");
-					_sb.IncrementTabDepth();
+					StartChildWrapper();
 				}
 				AppendValue(null, obj);
 			}
 
 			if (countIsZero)
 			{
-				_sb.EndLineWith("{}");
+                WriteEmptyChildren();
 			}
 			else
 			{
-				_sb.DecrementTabDepth();
-				_sb.AppendLine("}");
+				EndChildWrapper();
 			}
 		}
 
@@ -236,94 +271,73 @@ namespace ObjectPrinter
 		{
 			if (objToAppend == null || objToAppend.Count == 0)
 			{
-				_sb.EndLineWith("{}");
+				WriteEmptyChildren();
 				return;
 			}
 
-			_sb.EndLine();
-			_sb.AppendLine("{");
-			_sb.IncrementTabDepth();
+			StartChildWrapper();
+
 			foreach (DictionaryEntry de in objToAppend)
 			{
 				AppendValue(de.Key.ToString(), de.Value);
 			}
-			_sb.DecrementTabDepth();
-			_sb.AppendLine("}");
+			
+            EndChildWrapper();
 		}
 
 		private void AppendNameObjectCollectionBase(NameValueCollection objToAppend)
 		{
 			if (objToAppend == null || objToAppend.Count == 0)
 			{
-				_sb.EndLineWith("{}");
+				WriteEmptyChildren();
 				return;
 			}
 
-			_sb.EndLine();
-			_sb.AppendLine("{");
-			_sb.IncrementTabDepth();
+			StartChildWrapper();
+
 			for (int i = 0; i < objToAppend.Count; i++)
 			{
 				AppendValue(objToAppend.Keys[i], objToAppend[i]);
 			}
-			_sb.DecrementTabDepth();
-			_sb.AppendLine("}");
+			
+            EndChildWrapper();
 		}
+
+        private void AppendValue(string key, object value)
+        {
+            AppendValue(new ObjectInfo
+            {
+                Name = key,
+                Value = value,
+                //if value is null, we won't need the inspector
+                Inspector = value == null ? null : _config.GetInspector(value, value.GetType())
+            });
+        }
 
 		private void AppendValue(ObjectInfo objectInfo)
 		{
-			_sb.StartLine();
 			if (!string.IsNullOrEmpty(objectInfo.Name))
 			{
-				_sb.Append(objectInfo.Name);
-				_sb.Append(" : ");
+				_output.Write(objectInfo.Name);
+				_output.Write(" : ");
 			}
 
 			if (objectInfo.Value == null)
 			{
-				_sb.Append(NullValue);
+				_output.Write(NullValue);
 			}
 			else if (typeof(string).IsAssignableFrom(objectInfo.Type))
 			{
-				_sb.Append(objectInfo.Value);
+                //in case the string contains line returns, the next line will be indented from the member name
+                _output.Indent();
+				_output.Write(objectInfo.Value);
+                _output.Outdent();
 			}
 			else
 			{
-				AppendObject(objectInfo);	
+				WriteObject(objectInfo);	
 			}
-			_sb.EndLine();
-		}
-
-		private void AppendValue(string key, object value)
-		{
-			_sb.StartLine();
-			if (!string.IsNullOrEmpty(key))
-			{
-				_sb.Append(key);
-				_sb.Append(" : ");
-			}
-			if (value == null)
-			{
-				_sb.Append(NullValue);
-			}
-			else
-			{
-				var type = value.GetType();
-				if (typeof(string).IsAssignableFrom(type))
-				{
-					_sb.Append(value);
-				}
-				else
-				{
-					AppendObject(new ObjectInfo
-					             	{
-					             		Name = key,
-					             		Value = value,
-					             		Inspector = _config.GetInspector(value, type)
-					             	});
-				}
-			}
-			_sb.EndLine();
+			_output.WriteLine();
 		}
 	}
 }
