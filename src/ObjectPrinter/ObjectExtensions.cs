@@ -24,7 +24,7 @@
 		/// Creates a delegate that will use the ObjectPrinter ont the obj when ToString() is called on the delegate.
 		/// Useful for delaying execution of the ObjectPrinter until absolutely needed. i.e. logging
 		/// </summary>
-		public static LazyStringDelegate DumpToLazyString(this object obj)
+		public static LazyStringDelegate Dump(this object obj)
 		{
             return new LazyStringDelegate(() => new ObjectPrinter(obj).PrintToString());
 		}
@@ -33,7 +33,7 @@
 		/// Creates a delegate that will use the ObjectPrinter ont the obj when ToString() is called on the delegate.
 		/// Useful for delaying execution of the ObjectPrinter until absolutely needed. i.e. logging
 		/// </summary>
-		public static LazyStringDelegate DumpToLazyString(this object obj, string tab, string newline)
+		public static LazyStringDelegate Dump(this object obj, string tab, string newline)
 		{
             return new LazyStringDelegate(() => new ObjectPrinter(obj, tab, newline).PrintToString());
 		}
@@ -42,7 +42,7 @@
 		/// Creates a delegate that will use the ObjectPrinter ont the obj when ToString() is called on the delegate.
 		/// Useful for delaying execution of the ObjectPrinter until absolutely needed. i.e. logging
 		/// </summary>
-		public static LazyStringDelegate DumpToLazyString(this object obj, IObjectPrinterConfig config)
+		public static LazyStringDelegate Dump(this object obj, IObjectPrinterConfig config)
 		{
             return new LazyStringDelegate(() => new ObjectPrinter(obj, config).PrintToString());
 		}
