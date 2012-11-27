@@ -119,7 +119,7 @@ namespace ObjectPrinter
 			//Avoid StackOverflow caused by objects like ConfigurationException.Errors
 			if (_currentDepth >= _config.MaxDepth)
 			{
-				_output.Write("Maximum recursion depth reached");
+				_output.Write("Maximum recursion depth (" + _config.MaxDepth + ") reached");
 				return;
 			}
 
