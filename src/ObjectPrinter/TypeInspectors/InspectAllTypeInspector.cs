@@ -13,7 +13,7 @@ namespace ObjectPrinter.TypeInspectors
 		/// <summary>If ShouldEvaluateMember returns true, the value will be evaluated for the member</summary>
 		public Func<object, MemberInfo, bool> ShouldEvaluateMember { get; set; }
 
-		/// <summary>If ShouldIncludeMember returns true (after value is evaluated), the member will be printed out</summary>
+		/// <summary>If ShouldIncludeMember returns true (after member is evaluated), the member will be printed out</summary>
 		public Func<object, ObjectInfo, bool> ShouldIncludeMember { get; set; }
 
 		public static BindingFlags DefaultMemberBindingFlags = BindingFlags.Instance
@@ -40,11 +40,13 @@ namespace ObjectPrinter.TypeInspectors
 			return ShouldInspectType == null || ShouldInspectType(objectToInspect, typeOfObjectToInspect);
 		}
 
+        /// <summary>If ShouldEvaluate returns true, the value will be evaluated for the member</summary>
 		protected virtual bool ShouldEvaluate(object instance, MemberInfo member)
 		{
 			return ShouldEvaluateMember == null || ShouldEvaluateMember(instance, member);
 		}
 
+        /// <summary>If ShouldInclude returns true (after member is evaluated), the member will be printed out</summary>
 		protected virtual bool ShouldInclude(object instance, ObjectInfo info)
 		{
 			return ShouldIncludeMember == null || ShouldIncludeMember(instance, info);
