@@ -64,6 +64,7 @@
     <Compile Include="TypeInspectors\TypeInspectorExtensions.cs" />
     <Compile Include="Utilties\EnumerableExtensions.cs" />
     <Compile Include="Utilties\IndentAwareStringBuilder.cs" />
+    <Compile Include="Utilties\IndentableTextWriter.cs" />
     <Compile Include="Utilties\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
