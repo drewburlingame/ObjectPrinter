@@ -176,10 +176,10 @@ namespace ObjectPrinter
 			}
 		}
 
-		private bool TryGetSingleValue(ObjectInfo objectInfo, out object singleValue, out List<ObjectInfo> properties)
+		private bool TryGetSingleValue(ObjectInfo objectInfo, out object singleValue, out List<ObjectInfo> members)
 		{
 			singleValue = null;
-			properties = null;
+			members = null;
 
 			objectInfo.Inspector = objectInfo.Inspector ?? _config.GetInspector(objectInfo.Value, objectInfo.Type);
 			if (objectInfo.Inspector == null)
@@ -188,10 +188,10 @@ namespace ObjectPrinter
 				return true;
 			}
 
-			properties = objectInfo.Inspector.GetPropertyList(objectInfo).ToList();
-			if (properties.Count == 1 && (properties[0].Value == null || properties[0].Value is string))
+			members = objectInfo.Inspector.GetMemberList(objectInfo).ToList();
+			if (members.Count == 1 && (members[0].Value == null || members[0].Value is string))
 			{
-				singleValue = properties[0].Value;
+				singleValue = members[0].Value;
 				return true;
 			}
 

@@ -16,6 +16,7 @@ namespace ObjectPrinter.TypeInspectors
 		/// <summary>If ShouldIncludeMember returns true (after member is evaluated), the member will be printed out</summary>
 		public Func<object, ObjectInfo, bool> ShouldIncludeMember { get; set; }
 
+        public static bool DefaultEnableCaching = true;
 		public static BindingFlags DefaultMemberBindingFlags = BindingFlags.Instance
 		                                                         | BindingFlags.Public
 		                                                         | BindingFlags.GetProperty
@@ -24,12 +25,29 @@ namespace ObjectPrinter.TypeInspectors
 		public static bool DefaultIncludeMethods = false;
 		public static bool DefaultIncludeToStringWhenOverridden = true;
 
-		public BindingFlags MemberBindingFlags { get; set; }
-		public bool IncludeMethods { get; set; }
+
+	    private IMemberCache _memberCache;
+	    private BindingFlags _memberBindingFlags;
+
+        public bool EnableCaching { get; set; }
+	    public BindingFlags MemberBindingFlags
+	    {
+	        get { return _memberBindingFlags; }
+	        set
+	        {
+	            _memberBindingFlags = value;
+                _memberCache = EnableCaching 
+                    ? (IMemberCache) new MemberCache(value) 
+                    : new BigAlMemberCache(value);
+	        }
+	    }
+
+	    public bool IncludeMethods { get; set; }
 		public bool IncludeToStringWhenOverridden { get; set; }
 
 		public InspectAllTypeInspector()
 		{
+		    EnableCaching = DefaultEnableCaching;
 			MemberBindingFlags = DefaultMemberBindingFlags;
 			IncludeMethods = DefaultIncludeMethods;
 			IncludeToStringWhenOverridden = DefaultIncludeToStringWhenOverridden;
@@ -55,7 +73,8 @@ namespace ObjectPrinter.TypeInspectors
 		public virtual IEnumerable<ObjectInfo> GetMemberList(object objectToInspect, Type typeOfObjectToInspect)
 		{
 			var type = objectToInspect.GetType();
-			BindingFlags bindingFlags = MemberBindingFlags;
+
+		    var cache = _memberCache;
 
 			var members = new List<ObjectInfo>();
 
@@ -68,43 +87,43 @@ namespace ObjectPrinter.TypeInspectors
 				}
 			}
 
-			members.AddRange(
-				type.GetProperties(bindingFlags)
-					.Where(m => ShouldEvaluate(objectToInspect, m))
-					.Select(p => new ObjectInfo
-					             	{
-					             		Name = p.Name,
-					             		Value = ParsePropertyInfo(objectToInspect, p),
-					             		Inspector = null
-									})
-					.Where(o => ShouldInclude(objectToInspect, o))
-				);
+		    members.AddRange(
+		        cache.GetProperties(type)
+		                    .Where(m => ShouldEvaluate(objectToInspect, m))
+		                    .Select(p => new ObjectInfo
+		                        {
+		                            Name = p.Name,
+		                            Value = ParsePropertyInfo(objectToInspect, p),
+		                            Inspector = null
+		                        })
+		                    .Where(o => ShouldInclude(objectToInspect, o))
+		        );
 
-			members.AddRange(
-				type.GetFields(bindingFlags)
-					.Where(m => ShouldEvaluate(objectToInspect, m))
-					.Select(f => new ObjectInfo
-					             	{
-					             		Name = f.Name,
-					             		Value = ParseFieldInfo(objectToInspect, f),
-					             		Inspector = null
-									})
-					.Where(o => ShouldInclude(objectToInspect, o))
-				);
+		    members.AddRange(
+                cache.GetFields(type)
+		                    .Where(m => ShouldEvaluate(objectToInspect, m))
+		                    .Select(f => new ObjectInfo
+		                        {
+		                            Name = f.Name,
+		                            Value = ParseFieldInfo(objectToInspect, f),
+		                            Inspector = null
+		                        })
+		                    .Where(o => ShouldInclude(objectToInspect, o))
+		        );
 
 			if (IncludeMethods)
 			{
-				members.AddRange(
-					type.GetMethods(bindingFlags)
-					.Where(m => ShouldEvaluate(objectToInspect, m))
-					.Select(m => new ObjectInfo
-						            {
-						             	Name = m.Name,
-						             	Value = ParseMethodInfo(objectToInspect, m),
-						             	Inspector = null
-						            })
-					.Where(o => ShouldInclude(objectToInspect, o))
-					);
+			    members.AddRange(
+                    cache.GetMethods(type)
+			                    .Where(m => ShouldEvaluate(objectToInspect, m))
+			                    .Select(m => new ObjectInfo
+			                        {
+			                            Name = m.Name,
+			                            Value = ParseMethodInfo(objectToInspect, m),
+			                            Inspector = null
+			                        })
+			                    .Where(o => ShouldInclude(objectToInspect, o))
+			        );
 			}
 
 			return members;
