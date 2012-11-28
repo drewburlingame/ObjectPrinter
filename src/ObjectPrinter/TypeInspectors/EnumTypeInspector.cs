@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using ObjectPrinter.Utilties;
 
@@ -19,7 +18,7 @@ namespace ObjectPrinter.TypeInspectors
 			var objAsEnum = (Enum)objectToInspect;
 			string enumValues;
 
-			var isFlagEnum = typeOfObjectToInspect.GetCustomAttributes(typeof (FlagsAttribute), false).Any(a => true);
+			var isFlagEnum = !typeOfObjectToInspect.GetCustomAttributes(typeof (FlagsAttribute), false).IsNullOrEmpty();
 			if(isFlagEnum)
 			{
 				var allValues = Enum.GetValues(typeOfObjectToInspect);
