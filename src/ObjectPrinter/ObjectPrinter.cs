@@ -26,7 +26,7 @@ namespace ObjectPrinter
         private IndentableTextWriter _output;
 
 		private int _currentDepth = -1;
-		private readonly List<object> _objsAlreadyAppended = new List<object>();
+		private readonly Stack<object> _objStack = new Stack<object>();
 	    private ObjectInfosPrinter _objectInfosPrinter;
 	    private DictionaryPrinter _dictionaryPrinter;
 	    private NameValueCollectionPrinter _nameValueCollectionPrinter;
@@ -118,13 +118,13 @@ namespace ObjectPrinter
 			//Avoid referential loops by not letting an object be dumped as a descendent in the graph
 			//TODO: when value types create circular references, this fails 
 			//		because ReferenceEquals will box the value type and thus never have the same reference
-			if (_objsAlreadyAppended.Any(o => ReferenceEquals(objToAppend, o)))
+			if (_objStack.Any(o => ReferenceEquals(objToAppend, o)))
 			{
 				_output.Write("avoid circular loop for this [" + typeOfOjbToAppend.Name + "]: hashcode { " + objToAppend.GetHashCode() + " }");
 				return;
 			}
 
-			//Avoid StackOverflow caused by objects like ConfigurationException.Errors
+			//Avoid StackOverflow caused by recursive value types like Linq2Sql or ConfigurationException.Errors
 			if (_currentDepth >= _config.MaxDepth)
 			{
 				_output.Write("Maximum recursion depth (" + _config.MaxDepth + ") reached");
@@ -134,7 +134,7 @@ namespace ObjectPrinter
 
 			//*** continue recursive printing of the object
 
-			_objsAlreadyAppended.Add(objToAppend);
+			_objStack.Push(objToAppend);
 
 			if (objToAppend is XmlNode)
 			{
@@ -176,15 +176,8 @@ namespace ObjectPrinter
 			}
 
 			//we are done printing the descendents of this object.  
-			//free it to be printed in another section.
-			try
-			{
-				_objsAlreadyAppended.Remove(objToAppend);
-			}
-			catch
-			{
-				//not critcal so swallow.  Occurs when a class doesn't have a safe Equals override.
-			}
+            //free it to be printed in another section.
+            _objStack.Pop();
 		}
 
 		private bool TryGetSingleValue(ObjectInfo objectInfo, out object singleValue, out List<ObjectInfo> members)
