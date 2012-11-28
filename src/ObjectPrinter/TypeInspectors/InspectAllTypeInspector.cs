@@ -84,7 +84,7 @@ namespace ObjectPrinter.TypeInspectors
 				var toString = objectToInspect.ToString();
 				if (string.CompareOrdinal(toString, objectToInspect.GetType().ToString()) != 0)
 				{
-					members.Add(new ObjectInfo {Name = "ToString()", Value = toString, Inspector = null});
+					members.Add(new ObjectInfo {Name = "ToString()", Value = toString});
 				}
 			}
 
@@ -94,8 +94,7 @@ namespace ObjectPrinter.TypeInspectors
 		                    .Select(p => new ObjectInfo
 		                        {
 		                            Name = p.Name,
-		                            Value = ParsePropertyInfo(objectToInspect, p),
-		                            Inspector = null
+		                            Value = ParsePropertyInfo(objectToInspect, p)
 		                        })
 		                    .Where(o => ShouldInclude(objectToInspect, o))
 		        );
@@ -106,8 +105,7 @@ namespace ObjectPrinter.TypeInspectors
 		                    .Select(f => new ObjectInfo
 		                        {
 		                            Name = f.Name,
-		                            Value = ParseFieldInfo(objectToInspect, f),
-		                            Inspector = null
+		                            Value = ParseFieldInfo(objectToInspect, f)
 		                        })
 		                    .Where(o => ShouldInclude(objectToInspect, o))
 		        );
@@ -120,8 +118,7 @@ namespace ObjectPrinter.TypeInspectors
 			                    .Select(m => new ObjectInfo
 			                        {
 			                            Name = m.Name,
-			                            Value = ParseMethodInfo(objectToInspect, m),
-			                            Inspector = null
+			                            Value = ParseMethodInfo(objectToInspect, m)
 			                        })
 			                    .Where(o => ShouldInclude(objectToInspect, o))
 			        );

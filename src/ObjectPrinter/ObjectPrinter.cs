@@ -27,6 +27,10 @@ namespace ObjectPrinter
 
 		private int _currentDepth = -1;
 		private readonly List<object> _objsAlreadyAppended = new List<object>();
+	    private ObjectInfosPrinter _objectInfosPrinter;
+	    private DictionaryPrinter _dictionaryPrinter;
+	    private NameValueCollectionPrinter _nameValueCollectionPrinter;
+	    private EnumerablePrinter _enumerablePrinter;
 
 	    public ObjectPrinter(object obj)
 			: this(obj, GetDefaultContext())
@@ -54,7 +58,11 @@ namespace ObjectPrinter
         public void PrintTo(TextWriter output)
         {
             _output = new IndentableTextWriter(output, _tab, _newline);
-            WriteObject(new ObjectInfo { Value = _rootObject, Inspector = _config.GetInspector(_rootObject, _rootObject.GetType()) });
+            _objectInfosPrinter = new ObjectInfosPrinter(_output, AppendValue);
+            _dictionaryPrinter = new DictionaryPrinter(_output, AppendValue);
+            _nameValueCollectionPrinter = new NameValueCollectionPrinter(_output, AppendValue);
+            _enumerablePrinter = new EnumerablePrinter(_output, AppendValue);
+            WriteObject(new ObjectInfo { Value = _rootObject });
         }
 
 	    public string PrintToString()
@@ -134,15 +142,15 @@ namespace ObjectPrinter
 			}
 			else if (objToAppend is IDictionary)
 			{
-				AppendDictionary((IDictionary)objToAppend);
+				_dictionaryPrinter.Write((IDictionary)objToAppend);
 			}
 			else if (objToAppend is NameValueCollection)
 			{
-				AppendNameObjectCollectionBase((NameValueCollection)objToAppend);
+				_nameValueCollectionPrinter.Write((NameValueCollection)objToAppend);
 			}
 			else if (objToAppend is IEnumerable && !(objToAppend is string))
 			{
-				AppendEnumerable((IEnumerable)objToAppend);
+				_enumerablePrinter.Write((IEnumerable)objToAppend);
 			}
 			else
 			{
@@ -158,9 +166,12 @@ namespace ObjectPrinter
 					_output.Write("[" + typeOfOjbToAppend.Name + "]: hashcode { " + objToAppend.GetHashCode() + " }");
 					if (_config.IncludeLogging)
 					{
-						_output.Write(" - Inspector { " + objectInfo.Inspector.GetType().Name + " } ");
+					    var inspectorName = objectInfo.Inspector == null
+					                            ? NullValue
+					                            : objectInfo.Inspector.GetType().Name;
+					    _output.Write(" - Inspector { " + inspectorName + " } ");
 					}
-					AppendProperties(properties);
+				    _objectInfosPrinter.Write(properties);
 				}
 			}
 
@@ -181,7 +192,11 @@ namespace ObjectPrinter
 			singleValue = null;
 			members = null;
 
-			objectInfo.Inspector = objectInfo.Inspector ?? _config.GetInspector(objectInfo.Value, objectInfo.Type);
+            if (objectInfo.Inspector == null)
+            {
+                objectInfo.Inspector = _config.GetInspector(objectInfo.Value, objectInfo.Type);
+            }
+
 			if (objectInfo.Inspector == null)
 			{
 				singleValue = objectInfo.Value;
@@ -196,122 +211,6 @@ namespace ObjectPrinter
 			}
 
 			return false;
-        }
-
-
-        private void WriteEmptyChildren()
-        {
-            _output.WriteLine("{}");
-        }
-
-        private void StartChildWrapper()
-        {
-            _output.WriteLine();
-            _output.WriteLine("{");
-            _output.Indent();
-        }
-
-        private void EndChildWrapper()
-        {
-            _output.Outdent();
-            //no need to writeline because the object itself will 
-            _output.Write("}");
-        }
-
-		private void AppendProperties(List<ObjectInfo> objectInfos)
-		{
-			if (objectInfos.IsNullOrEmpty())
-			{
-			    WriteEmptyChildren();
-			    return;
-			}
-
-		    StartChildWrapper();
-
-		    foreach (var objectInfo in objectInfos)
-			{
-				AppendValue(objectInfo);
-			}
-
-			EndChildWrapper();
-		}
-
-	    private void AppendEnumerable(IEnumerable objToAppend)
-		{
-			if (objToAppend == null)
-			{
-                WriteEmptyChildren();
-				return;
-			}
-
-			//makes the print prettier.  needed because IEnumerable has no Count or Length property
-			bool countIsZero = true;
-
-			foreach (var obj in objToAppend)
-			{
-				if (countIsZero)
-				{
-					countIsZero = false;
-					StartChildWrapper();
-				}
-				AppendValue(null, obj);
-			}
-
-			if (countIsZero)
-			{
-                WriteEmptyChildren();
-			}
-			else
-			{
-				EndChildWrapper();
-			}
-		}
-
-		private void AppendDictionary(IDictionary objToAppend)
-		{
-			if (objToAppend == null || objToAppend.Count == 0)
-			{
-				WriteEmptyChildren();
-				return;
-			}
-
-			StartChildWrapper();
-
-			foreach (DictionaryEntry de in objToAppend)
-			{
-				AppendValue(de.Key.ToString(), de.Value);
-			}
-			
-            EndChildWrapper();
-		}
-
-		private void AppendNameObjectCollectionBase(NameValueCollection objToAppend)
-		{
-			if (objToAppend == null || objToAppend.Count == 0)
-			{
-				WriteEmptyChildren();
-				return;
-			}
-
-			StartChildWrapper();
-
-			for (int i = 0; i < objToAppend.Count; i++)
-			{
-				AppendValue(objToAppend.Keys[i], objToAppend[i]);
-			}
-			
-            EndChildWrapper();
-		}
-
-        private void AppendValue(string key, object value)
-        {
-            AppendValue(new ObjectInfo
-            {
-                Name = key,
-                Value = value,
-                //if value is null, we won't need the inspector
-                Inspector = value == null ? null : _config.GetInspector(value, value.GetType())
-            });
         }
 
 		private void AppendValue(ObjectInfo objectInfo)

@@ -44,11 +44,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseEnumerablePrinter.cs" />
+    <Compile Include="DictionaryPrinter.cs" />
+    <Compile Include="EnumerablePrinter.cs" />
     <Compile Include="IObjectPrinterConfig.cs" />
     <Compile Include="ExceptionExtensions.cs" />
     <Compile Include="LazyStringDelegate.cs" />
+    <Compile Include="NameValueCollectionPrinter.cs" />
     <Compile Include="NonSerializableWrapper.cs" />
     <Compile Include="ObjectExtensions.cs" />
+    <Compile Include="ObjectInfosPrinter.cs" />
     <Compile Include="Utilties\BigAlMemberCache.cs" />
     <Compile Include="TypeInspectors\Funcs.cs" />
     <Compile Include="Utilties\IMemberCache.cs" />
