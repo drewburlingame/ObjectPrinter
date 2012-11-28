@@ -9,9 +9,10 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ObjectPrinter.Specs</RootNamespace>
-    <AssemblyName>ObjectPrinter.Specs</AssemblyName>
+    <AssemblyName>s</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FluentAssertions">
@@ -64,6 +67,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ObjectPrinter.Log4Net\ObjectPrinter.Log4Net.csproj">
+      <Project>{38524b70-3d84-4e81-961d-1f287f0e9605}</Project>
+      <Name>ObjectPrinter.Log4Net</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ObjectPrinter\ObjectPrinter.csproj">
       <Project>{17FAE841-474C-4B3B-89A1-13BC44364171}</Project>
       <Name>ObjectPrinter</Name>

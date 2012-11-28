@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ObjectPrinter.Log4Net;
 using ObjectPrinter.TypeInspectors;
 
 namespace ObjectPrinter
@@ -14,19 +13,17 @@ namespace ObjectPrinter
 		public static string DefaultNewLine = Environment.NewLine;
 		public static bool DefaultIncludeLogging = false;
 
-		private static ITypeInspector[] _inspectorsWithAllTypesInspected = new ITypeInspector[]
+		private static ITypeInspector[] _inspectorsWithAllTypesInspected = new []
 		            {
 		                new EnumTypeInspector(),
 		                new ExceptionTypeInspector(),
-		                new Log4NetTypeInspector(),
 		                DefaultTypeInspector
 		            };
 
-		private static ITypeInspector[] _inspectorsWithMsTypesToStringed = new ITypeInspector[]
+		private static ITypeInspector[] _inspectorsWithMsTypesToStringed = new []
 			      	{
 			      		new EnumTypeInspector(),
 			      		new ExceptionTypeInspector(),
-						new Log4NetTypeInspector(),
 			      		new ToStringTypeInspector { ShouldInspectType = Funcs.IncludeMsBuiltInNamespaces },
 			      		DefaultTypeInspector
 			      	};

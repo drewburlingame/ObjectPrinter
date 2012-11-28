@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{17FAE841-474C-4B3B-89A1-13BC44364171}</ProjectGuid>
+    <ProjectGuid>{38524B70-3D84-4E81-961D-1F287F0E9605}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ObjectPrinter</RootNamespace>
-    <AssemblyName>ObjectPrinter</AssemblyName>
+    <RootNamespace>ObjectPrinter.Log4Net</RootNamespace>
+    <AssemblyName>ObjectPrinter.Log4Net</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,9 +29,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,33 +43,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseEnumerablePrinter.cs" />
-    <Compile Include="DictionaryPrinter.cs" />
-    <Compile Include="EnumerablePrinter.cs" />
-    <Compile Include="IObjectPrinterConfig.cs" />
-    <Compile Include="ExceptionExtensions.cs" />
-    <Compile Include="LazyStringDelegate.cs" />
-    <Compile Include="NameValueCollectionPrinter.cs" />
-    <Compile Include="NonSerializableWrapper.cs" />
-    <Compile Include="ObjectExtensions.cs" />
-    <Compile Include="ObjectInfosPrinter.cs" />
-    <Compile Include="Utilties\BigAlMemberCache.cs" />
-    <Compile Include="TypeInspectors\Funcs.cs" />
-    <Compile Include="Utilties\IMemberCache.cs" />
-    <Compile Include="TypeInspectors\ITypeInspector.cs" />
-    <Compile Include="ObjectInfo.cs" />
-    <Compile Include="ObjectPrinter.cs" />
-    <Compile Include="ObjectPrinterConfig.cs" />
+    <Compile Include="Log4NetObjectRenderer.cs" />
+    <Compile Include="Log4NetTypeInspector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TypeInspectors\InspectAllTypeInspector.cs" />
-    <Compile Include="TypeInspectors\EnumTypeInspector.cs" />
-    <Compile Include="TypeInspectors\ExceptionTypeInspector.cs" />
-    <Compile Include="Utilties\MemberCache.cs" />
-    <Compile Include="TypeInspectors\ToStringTypeInspector.cs" />
-    <Compile Include="TypeInspectors\TypeInspectorExtensions.cs" />
-    <Compile Include="Utilties\EnumerableExtensions.cs" />
-    <Compile Include="Utilties\IndentableTextWriter.cs" />
-    <Compile Include="Utilties\StringExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ObjectPrinter\ObjectPrinter.csproj">
+      <Project>{17fae841-474c-4b3b-89a1-13bc44364171}</Project>
+      <Name>ObjectPrinter</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

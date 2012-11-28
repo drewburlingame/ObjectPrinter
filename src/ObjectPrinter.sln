@@ -1,9 +1,11 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectPrinter", "ObjectPrinter\ObjectPrinter.csproj", "{17FAE841-474C-4B3B-89A1-13BC44364171}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectPrinter.Specs", "ObjectPrinter.Specs\ObjectPrinter.Specs.csproj", "{F7C71361-C26C-40AA-AF7E-F39740759553}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectPrinter.Log4Net", "ObjectPrinter.Log4Net\ObjectPrinter.Log4Net.csproj", "{38524B70-3D84-4E81-961D-1F287F0E9605}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +21,10 @@ Global
 		{F7C71361-C26C-40AA-AF7E-F39740759553}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7C71361-C26C-40AA-AF7E-F39740759553}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7C71361-C26C-40AA-AF7E-F39740759553}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38524B70-3D84-4E81-961D-1F287F0E9605}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38524B70-3D84-4E81-961D-1F287F0E9605}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38524B70-3D84-4E81-961D-1F287F0E9605}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38524B70-3D84-4E81-961D-1F287F0E9605}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
