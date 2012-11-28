@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using ObjectPrinter.TypeInspectors;
 
-namespace ObjectPrinter.TypeInspectors
+namespace ObjectPrinter.Utilties
 {
     ///<summary>Big Al (Alzheimers) doesn't remember a thing.  No caching happens here.</summary>
     public class BigAlMemberCache : IMemberCache

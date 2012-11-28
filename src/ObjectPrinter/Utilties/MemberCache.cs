@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace ObjectPrinter.TypeInspectors
+namespace ObjectPrinter.Utilties
 {
     public class MemberCache : IMemberCache
     {

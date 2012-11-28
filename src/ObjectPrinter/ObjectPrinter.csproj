@@ -49,9 +49,9 @@
     <Compile Include="LazyStringDelegate.cs" />
     <Compile Include="NonSerializableWrapper.cs" />
     <Compile Include="ObjectExtensions.cs" />
-    <Compile Include="TypeInspectors\BigAlMemberCache.cs" />
+    <Compile Include="Utilties\BigAlMemberCache.cs" />
     <Compile Include="TypeInspectors\Funcs.cs" />
-    <Compile Include="TypeInspectors\IMemberCache.cs" />
+    <Compile Include="Utilties\IMemberCache.cs" />
     <Compile Include="TypeInspectors\ITypeInspector.cs" />
     <Compile Include="Log4Net\Log4NetObjectRenderer.cs" />
     <Compile Include="Log4Net\Log4NetTypeInspector.cs" />
@@ -62,7 +62,7 @@
     <Compile Include="TypeInspectors\InspectAllTypeInspector.cs" />
     <Compile Include="TypeInspectors\EnumTypeInspector.cs" />
     <Compile Include="TypeInspectors\ExceptionTypeInspector.cs" />
-    <Compile Include="TypeInspectors\MemberCache.cs" />
+    <Compile Include="Utilties\MemberCache.cs" />
     <Compile Include="TypeInspectors\ToStringTypeInspector.cs" />
     <Compile Include="TypeInspectors\TypeInspectorExtensions.cs" />
     <Compile Include="Utilties\EnumerableExtensions.cs" />
