@@ -38,22 +38,12 @@ namespace ObjectPrinter
 		{
 		}
 
-		public ObjectPrinter(object obj, string tab, string newline)
-			: this(obj, GetDefaultContext(), tab, newline)
-		{
-		}
-
 		public ObjectPrinter(object obj, IObjectPrinterConfig config)
-            : this(obj, config, config.Tab, config.NewLine)
 		{
-		}
-
-        private ObjectPrinter(object obj, IObjectPrinterConfig config, string tab, string newline)
-        {
             _rootObject = obj;
             _config = config;
-            _tab = tab;
-            _newline = newline;
+            _tab = config.Tab;
+            _newline = config.NewLine;
         }
 
         public void PrintTo(TextWriter output)
