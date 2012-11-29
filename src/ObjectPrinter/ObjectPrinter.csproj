@@ -48,7 +48,7 @@
     <Compile Include="ExceptionExtensions.cs" />
     <Compile Include="Utilties\LazyString.cs" />
     <Compile Include="Printers\NameValueCollectionPrinter.cs" />
-    <Compile Include="NonSerializableWrapper.cs" />
+    <Compile Include="Utilties\NonSerializableWrapper.cs" />
     <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Printers\ObjectInfosPrinter.cs" />
     <Compile Include="Utilties\BigAlMemberCache.cs" />

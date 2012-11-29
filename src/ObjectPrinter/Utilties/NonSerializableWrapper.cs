@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace ObjectPrinter
+namespace ObjectPrinter.Utilties
 {
 	[Serializable]
 	public class NonSerializableWrapper : ISerializable
