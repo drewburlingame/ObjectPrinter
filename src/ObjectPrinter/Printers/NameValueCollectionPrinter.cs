@@ -2,7 +2,7 @@
 using System.Collections.Specialized;
 using ObjectPrinter.Utilties;
 
-namespace ObjectPrinter
+namespace ObjectPrinter.Printers
 {
     internal class NameValueCollectionPrinter : BaseEnumerablePrinter
     {

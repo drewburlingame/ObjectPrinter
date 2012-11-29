@@ -2,7 +2,7 @@
 using System.Collections;
 using ObjectPrinter.Utilties;
 
-namespace ObjectPrinter
+namespace ObjectPrinter.Printers
 {
     internal class DictionaryPrinter : BaseEnumerablePrinter
     {
@@ -28,7 +28,7 @@ namespace ObjectPrinter
 
             foreach (DictionaryEntry obj in _objToAppend)
             {
-                WriteOne(obj.Key == null ? null : obj.Key.ToString(), obj.Value);
+                WriteOne(obj.Key.ToString(), obj.Value);
             }
         }
     }

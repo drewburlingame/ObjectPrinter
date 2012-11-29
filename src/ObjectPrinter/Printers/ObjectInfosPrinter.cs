@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using ObjectPrinter.Utilties;
 
-namespace ObjectPrinter
+namespace ObjectPrinter.Printers
 {
     internal class ObjectInfosPrinter : BaseEnumerablePrinter
     {

@@ -2,7 +2,7 @@
 using System.Collections;
 using ObjectPrinter.Utilties;
 
-namespace ObjectPrinter
+namespace ObjectPrinter.Printers
 {
     internal class EnumerablePrinter : BaseEnumerablePrinter
     {

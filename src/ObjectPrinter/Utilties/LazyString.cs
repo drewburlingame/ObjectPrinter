@@ -6,7 +6,7 @@ namespace ObjectPrinter.Utilties
 	/// A way to defer execution of the object printer until the last possible minute.
 	/// Useful for logging to prevent littering code with IsLevelEnabled calls.
 	/// </summary>
-	internal class LazyString
+	public class LazyString
 	{
 		readonly Func<string> _callback;
 

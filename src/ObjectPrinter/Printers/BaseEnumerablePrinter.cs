@@ -1,7 +1,7 @@
 ﻿using System;
 using ObjectPrinter.Utilties;
 
-namespace ObjectPrinter
+namespace ObjectPrinter.Printers
 {
     internal abstract class BaseEnumerablePrinter
     {
