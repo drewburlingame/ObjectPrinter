@@ -1,4 +1,5 @@
 using System.IO;
+using ObjectPrinter.Utilties;
 using log4net.ObjectRenderer;
 
 namespace ObjectPrinter.Log4Net
@@ -20,7 +21,7 @@ namespace ObjectPrinter.Log4Net
 				return;
 			}
 
-			if (obj is LazyStringDelegate)
+			if (obj is LazyString)
 			{
 				writer.Write(obj.ToString());
 				return;
