@@ -21,8 +21,8 @@ namespace ObjectPrinter
 
         private readonly object _rootObject;
         private readonly IObjectPrinterConfig _config;
-        private string _tab;
-        private string _newline;
+        private readonly string _tab;
+        private readonly string _newline;
 
         private IndentableTextWriter _output;
 
