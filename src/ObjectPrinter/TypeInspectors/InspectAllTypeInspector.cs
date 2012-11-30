@@ -8,13 +8,13 @@ namespace ObjectPrinter.TypeInspectors
 {
 	public class InspectAllTypeInspector : ITypeInspector
 	{
-		/// <summary>If ShouldInspectType returns true, this inspector will handle the type</summary>
+		/// <summary>If ShouldInspectType returns true, this inspector will handle the type.</summary>
 		public Func<object, Type, bool> ShouldInspectType { get; set; }
 
-		/// <summary>If ShouldEvaluateMember returns true, the value will be evaluated for the member</summary>
+		/// <summary>If ShouldEvaluateMember returns true, the value will be evaluated for the member. (EvaluateMember runs before IncludeMember)</summary>
 		public Func<object, MemberInfo, bool> ShouldEvaluateMember { get; set; }
 
-		/// <summary>If ShouldIncludeMember returns true (after member is evaluated), the member will be printed out</summary>
+        /// <summary>If ShouldIncludeMember returns true (after member is evaluated), the member will be printed out. (EvaluateMember runs before IncludeMember)</summary>
 		public Func<object, ObjectInfo, bool> ShouldIncludeMember { get; set; }
 
         public static bool DefaultEnableCaching = true;
