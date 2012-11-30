@@ -21,7 +21,7 @@ namespace ObjectPrinter.Specs
             writer.Indent();
             writer.WriteLine("determines\n");
             writer.Outdent();
-            writer.Write("if\n");
+            writer.Write("if\r");
             writer.Indent();
             writer.WriteLine("this");
             writer.WriteLine("\twill");
