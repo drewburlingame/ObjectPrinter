@@ -129,7 +129,10 @@ namespace ObjectPrinter
 
             if (objToAppend is string)
             {
+                //in case the string contains line returns, the next line will be indented from the member name
+                _output.Indent();
                 _output.Write((string)objToAppend);
+                _output.Outdent();
             }
 			else if (objToAppend is XmlNode)
 			{
@@ -212,13 +215,6 @@ namespace ObjectPrinter
 			if (objectInfo.Value == null)
 			{
 				_output.Write(NullValue);
-			}
-			else if (typeof(string).IsAssignableFrom(objectInfo.Type))
-			{
-                //in case the string contains line returns, the next line will be indented from the member name
-                _output.Indent();
-				_output.Write(objectInfo.Value);
-                _output.Outdent();
 			}
 			else
 			{
