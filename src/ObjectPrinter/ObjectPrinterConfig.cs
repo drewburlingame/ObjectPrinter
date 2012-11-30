@@ -93,7 +93,12 @@ namespace ObjectPrinter
 			IncludeLogging = DefaultIncludeLogging;
 		}
 
-		public virtual ITypeInspector GetInspector(object objectToInspect, Type typeOfObjectToInspect)
+
+        /// <summary>
+        /// Returns the first ITypeInspector from Inspectors where ShouldInspect returns true.
+        /// If none return true, the DefaultTypeInspector is used
+        /// </summary>
+		public ITypeInspector GetInspector(object objectToInspect, Type typeOfObjectToInspect)
 		{
 			return Inspectors
 			       	.FirstOrDefault(inspector => inspector.ShouldInspect(objectToInspect, typeOfObjectToInspect))
