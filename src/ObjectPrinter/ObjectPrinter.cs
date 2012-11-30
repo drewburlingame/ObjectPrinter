@@ -127,7 +127,11 @@ namespace ObjectPrinter
 
 			_objStack.Push(objToAppend);
 
-			if (objToAppend is XmlNode)
+            if (objToAppend is string)
+            {
+                _output.Write((string)objToAppend);
+            }
+			else if (objToAppend is XmlNode)
 			{
 				_output.Write(((XmlNode)objToAppend).InnerXml);
 			}
@@ -139,7 +143,7 @@ namespace ObjectPrinter
 			{
 				_nameValueCollectionPrinter.Write((NameValueCollection)objToAppend);
 			}
-			else if (objToAppend is IEnumerable && !(objToAppend is string))
+			else if (objToAppend is IEnumerable)
 			{
 				_enumerablePrinter.Write((IEnumerable)objToAppend);
 			}
