@@ -35,7 +35,7 @@ namespace ObjectPrinter.Log4Net
 				return;
 			}
 
-			new ObjectPrinter(obj).PrintTo(writer);
+			new Printers.ObjectPrinter(obj).PrintTo(writer);
 		}
 	}
 }

@@ -57,7 +57,7 @@
     <Compile Include="Utilties\IMemberCache.cs" />
     <Compile Include="TypeInspectors\ITypeInspector.cs" />
     <Compile Include="ObjectInfo.cs" />
-    <Compile Include="ObjectPrinter.cs" />
+    <Compile Include="Printers\ObjectPrinter.cs" />
     <Compile Include="ObjectPrinterConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TypeInspectors\InspectAllTypeInspector.cs" />

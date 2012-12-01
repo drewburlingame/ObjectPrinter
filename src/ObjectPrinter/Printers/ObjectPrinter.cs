@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using ObjectPrinter.Printers;
 using ObjectPrinter.TypeInspectors;
 using ObjectPrinter.Utilties;
 
-namespace ObjectPrinter
+namespace ObjectPrinter.Printers
 {
 	public class ObjectPrinter
 	{
