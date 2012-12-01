@@ -98,7 +98,7 @@ namespace ObjectPrinter.Specs
 		NVC : {NULL}
 	}
 	Parent : {NULL}
-	Array : 
+	Array : [ObjectPrintable[]]: hashcode { $Array_Hashcode$ }
 	{
 		[ObjectPrintable]: hashcode { 17 }
 		{
@@ -128,7 +128,7 @@ namespace ObjectPrinter.Specs
 			NVC : {NULL}
 		}
 	}
-	Dictionary : 
+	Dictionary : [Dictionary`2]: hashcode { $Dictionary_Hashcode$ }
 	{
 		17 : [ObjectPrintable]: hashcode { 17 }
 		{
@@ -158,7 +158,7 @@ namespace ObjectPrinter.Specs
 			NVC : {NULL}
 		}
 	}
-	Hashtable : 
+	Hashtable : [Hashtable]: hashcode { $Hashtable_Hashcode$ }
 	{
 		17 : [ObjectPrintable]: hashcode { 17 }
 		{
@@ -188,7 +188,7 @@ namespace ObjectPrinter.Specs
 			NVC : {NULL}
 		}
 	}
-	NVC : 
+	NVC : [NameValueCollection]: hashcode { $NVC_Hashcode$ }
 	{
 		stringWithReturns : this is
 			a string
@@ -196,12 +196,17 @@ namespace ObjectPrinter.Specs
 			and returns
 		boringString : i'm a bore
 	}
-}";
+}"
+.Replace("$Array_Hashcode$", parent.Array.GetHashCode().ToString())
+.Replace("$Dictionary_Hashcode$", parent.Dictionary.GetHashCode().ToString())
+.Replace("$Hashtable_Hashcode$", parent.Hashtable.GetHashCode().ToString())
+.Replace("$NVC_Hashcode$", parent.NVC.GetHashCode().ToString())
+;
 			//replace tabs & newlines to easily compare white spaces
 //			expected = expected.Replace(Environment.NewLine, "_n").Replace("\t", "_t");
 //			actual = actual.Replace(Environment.NewLine, "_n").Replace("\t", "_t");
 //			Console.Out.WriteLine(expected);
-			Console.Out.WriteLine(actual);
+//			Console.Out.WriteLine(actual);
 //			Console.Out.WriteLine(actual.Length);
 //			Console.Out.WriteLine(expected.Length);
 			actual.Should().Be(expected);

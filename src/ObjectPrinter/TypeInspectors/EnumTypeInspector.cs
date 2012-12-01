@@ -5,7 +5,7 @@ using ObjectPrinter.Utilties;
 
 namespace ObjectPrinter.TypeInspectors
 {
-	/// <summary>Returns the full name of an enum</summary>
+    /// <summary>Returns the full name of an enum</summary>
 	public class EnumTypeInspector : ITypeInspector
 	{
 		public bool ShouldInspect(object objectToInspect, Type typeOfObjectToInspect)

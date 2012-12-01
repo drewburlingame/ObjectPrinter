@@ -17,6 +17,10 @@ namespace ObjectPrinter
 		private static ITypeInspector[] _inspectorsWithAllTypesInspected = new []
 		            {
 		                new EnumTypeInspector(),
+                        new XmlNodeTypeInspector(), 
+                        new DictionaryTypeInspector(), 
+                        new NameValueCollectionTypeInspector(), 
+                        new EnumerableTypeInspector(), 
 		                new ExceptionTypeInspector(),
 		                DefaultTypeInspector
 		            };
@@ -24,6 +28,10 @@ namespace ObjectPrinter
 		private static ITypeInspector[] _inspectorsWithMsTypesToStringed = new []
 			      	{
 			      		new EnumTypeInspector(),
+                        new XmlNodeTypeInspector(), 
+                        new DictionaryTypeInspector(), 
+                        new NameValueCollectionTypeInspector(), 
+                        new EnumerableTypeInspector(), 
 			      		new ExceptionTypeInspector(),
 			      		new ToStringTypeInspector { ShouldInspectType = Funcs.IncludeMsBuiltInNamespaces },
 			      		DefaultTypeInspector

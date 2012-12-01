@@ -41,13 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Printers\BaseEnumerablePrinter.cs" />
-    <Compile Include="Printers\DictionaryPrinter.cs" />
-    <Compile Include="Printers\EnumerablePrinter.cs" />
     <Compile Include="IObjectPrinterConfig.cs" />
     <Compile Include="ExceptionExtensions.cs" />
+    <Compile Include="TypeInspectors\BaseTypedInspector.cs" />
+    <Compile Include="TypeInspectors\DictionaryTypeInspector.cs" />
+    <Compile Include="TypeInspectors\EnumerableTypeInspector.cs" />
+    <Compile Include="TypeInspectors\NameValueCollectionTypeInspector.cs" />
+    <Compile Include="TypeInspectors\XmlNodeTypeInspector.cs" />
     <Compile Include="Utilties\LazyString.cs" />
-    <Compile Include="Printers\NameValueCollectionPrinter.cs" />
     <Compile Include="Utilties\NonSerializableWrapper.cs" />
     <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Printers\ObjectInfosPrinter.cs" />

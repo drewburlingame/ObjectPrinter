@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Xml;
 using ObjectPrinter.Printers;
 using ObjectPrinter.TypeInspectors;
 using ObjectPrinter.Utilties;
@@ -29,9 +26,6 @@ namespace ObjectPrinter
 		private int _currentDepth = -1;
 		private readonly Stack<object> _objStack = new Stack<object>();
 	    private ObjectInfosPrinter _objectInfosPrinter;
-	    private DictionaryPrinter _dictionaryPrinter;
-	    private NameValueCollectionPrinter _nameValueCollectionPrinter;
-	    private EnumerablePrinter _enumerablePrinter;
 
 	    public ObjectPrinter(object obj)
 			: this(obj, GetDefaultContext())
@@ -50,9 +44,6 @@ namespace ObjectPrinter
         {
             _output = new IndentableTextWriter(output, _tab, _newline);
             _objectInfosPrinter = new ObjectInfosPrinter(_output, AppendValue);
-            _dictionaryPrinter = new DictionaryPrinter(_output, AppendValue);
-            _nameValueCollectionPrinter = new NameValueCollectionPrinter(_output, AppendValue);
-            _enumerablePrinter = new EnumerablePrinter(_output, AppendValue);
             WriteObject(new ObjectInfo { Value = _rootObject });
         }
 
@@ -134,22 +125,6 @@ namespace ObjectPrinter
                 _output.Write((string)objToAppend);
                 _output.Outdent();
             }
-			else if (objToAppend is XmlNode)
-			{
-				_output.Write(((XmlNode)objToAppend).InnerXml);
-			}
-			else if (objToAppend is IDictionary)
-			{
-				_dictionaryPrinter.Write((IDictionary)objToAppend);
-			}
-			else if (objToAppend is NameValueCollection)
-			{
-				_nameValueCollectionPrinter.Write((NameValueCollection)objToAppend);
-			}
-			else if (objToAppend is IEnumerable)
-			{
-				_enumerablePrinter.Write((IEnumerable)objToAppend);
-			}
 			else
 			{
 				object singleValue;
