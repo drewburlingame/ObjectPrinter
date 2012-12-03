@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace ObjectPrinter.Specs
 {
-	[TestFixture]
+    [TestFixture]
 	public class ObjectPrinterTests
     {
         string _xmlString = "<bus:exception xmlns:bus=\"http://developer.cognos.com/schemas/bibus/3/\"><severity>error</severity><errorCode>cmBadProp</errorCode><bus:message><messageString>CM-REQ-4010 The property \"mobileDeviceID\" is unknown. Remove it or replace it with a valid property.</messageString></bus:message></bus:exception>";

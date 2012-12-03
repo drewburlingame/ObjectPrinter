@@ -24,7 +24,7 @@ namespace ObjectPrinter
 
 	    public static void SetContext(this Exception e, string name, object context, bool ifNotSerializablePrintOnSerialize = false)
 		{
-			if (!context.GetType().IsSerializable)
+			if (context != null && !context.GetType().IsSerializable)
 			{
 				context = new NonSerializableWrapper {Context = context, PrintOnSerialize = ifNotSerializablePrintOnSerialize};
 			}
