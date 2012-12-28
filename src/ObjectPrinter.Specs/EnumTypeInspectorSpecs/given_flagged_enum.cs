@@ -1,10 +1,8 @@
-﻿
-
-using System;
+﻿using System;
 using Machine.Specifications;
 using ObjectPrinter.TypeInspectors;
 
-namespace ObjectPrinter.Specs
+namespace ObjectPrinter.Specs.EnumTypeInspectorSpecs
 {
 	[Subject(typeof(EnumTypeInspector))]
 	public class given_flagged_enum_value_with_both_Val1_and_Val2

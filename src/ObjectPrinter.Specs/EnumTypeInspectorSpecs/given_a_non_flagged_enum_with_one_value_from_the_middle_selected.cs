@@ -2,7 +2,7 @@ using System;
 using Machine.Specifications;
 using ObjectPrinter.TypeInspectors;
 
-namespace ObjectPrinter.Specs
+namespace ObjectPrinter.Specs.EnumTypeInspectorSpecs
 {
 	[Subject(typeof(EnumTypeInspector))]
 	public class given_a_non_flagged_enum_with_one_value_from_the_middle_selected
