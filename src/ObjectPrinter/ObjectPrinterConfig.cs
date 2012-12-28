@@ -5,53 +5,40 @@ using ObjectPrinter.TypeInspectors;
 
 namespace ObjectPrinter
 {
-	public class ObjectPrinterConfig : IObjectPrinterConfig
+    public class ObjectPrinterConfig : IObjectPrinterConfig
 	{
-		public static ITypeInspector DefaultTypeInspector = new InspectAllTypeInspector();
+	    ///<summary>
+	    /// The catch-all inspector to use if no inspector is found to inspect a given type.  
+	    /// "Default" as in the default in a switch statement.
+	    /// This will be appended to all configs.
+	    ///</summary>
+		public static ITypeInspector CatchAllTypeInspector = new InspectAllTypeInspector();
 
+	    ///<summary>The default tab character</summary>
 		public static string DefaultTab = "\t";
+
+	    ///<summary>The default newline character</summary>
         public static string DefaultNewLine = Environment.NewLine;
+
+	    ///<summary>
+	    /// The default depth to recurse into the object graph.  Default is 10.
+	    /// This guards against self-referencing value types, like those found in Linq2Sql data definitions.
+	    ///</summary>
         public static int DefaultMaxDepth = 10;
+
+	    ///<summary>
+	    /// The default setting for including ObjectPrinter logging in the output
+	    ///</summary>
 		public static bool DefaultIncludeLogging = false;
 
-		private static ITypeInspector[] _inspectorsWithAllTypesInspected = new []
-		            {
-		                new EnumTypeInspector(),
-                        new XmlNodeTypeInspector(), 
-                        new DictionaryTypeInspector(), 
-                        new NameValueCollectionTypeInspector(), 
-                        new EnumerableTypeInspector(), 
-		                new ExceptionTypeInspector(),
-		                DefaultTypeInspector
-		            };
-
-		private static ITypeInspector[] _inspectorsWithMsTypesToStringed = new []
-			      	{
-			      		new EnumTypeInspector(),
-                        new XmlNodeTypeInspector(), 
-                        new DictionaryTypeInspector(), 
-                        new NameValueCollectionTypeInspector(), 
-                        new EnumerableTypeInspector(), 
-			      		new ExceptionTypeInspector(),
-			      		new ToStringTypeInspector { ShouldInspectType = Funcs.IncludeMsBuiltInNamespaces },
-			      		DefaultTypeInspector
-			      	};
-
-		public static IEnumerable<ITypeInspector> InspectorsWithAllTypesInspected
-		{
-			get { return _inspectorsWithAllTypesInspected; }
-		}
-
-		public static IEnumerable<ITypeInspector> InspectorsWithMsTypesToStringed
-		{
-			get { return _inspectorsWithMsTypesToStringed; }
-		}
+        public static IEnumerable<ITypeInspector> DefaultTypeInspectors =
+            new TypeInspectorsRegistration().GetRegisteredInspectors();
 
 		/// <summary>
 		/// Delegate to return the inspectors to use and the order to use them in.
 		/// Change this at runtime to update the inspectors used and their order.
 		/// </summary>
-		public static Func<IEnumerable<ITypeInspector>> GetInspectors = () => InspectorsWithMsTypesToStringed;
+		public static Func<IEnumerable<ITypeInspector>> GetInspectors = () => DefaultTypeInspectors;
 
 	    private IEnumerable<ITypeInspector> _inspectors;
 
@@ -104,13 +91,13 @@ namespace ObjectPrinter
 
         /// <summary>
         /// Returns the first ITypeInspector from Inspectors where ShouldInspect returns true.
-        /// If none return true, the DefaultTypeInspector is used
+        /// If none return true, the CatchAllTypeInspector is used
         /// </summary>
 		public ITypeInspector GetInspector(object objectToInspect, Type typeOfObjectToInspect)
 		{
 			return Inspectors
 			       	.FirstOrDefault(inspector => inspector.ShouldInspect(objectToInspect, typeOfObjectToInspect))
-			       ?? DefaultTypeInspector;
+			       ?? CatchAllTypeInspector;
 		}
 	}
 }

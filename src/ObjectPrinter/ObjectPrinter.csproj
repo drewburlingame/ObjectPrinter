@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="IObjectPrinterConfig.cs" />
     <Compile Include="ExceptionExtensions.cs" />
+    <Compile Include="TypeInspectorsRegistration.cs" />
     <Compile Include="TypeInspectors\BaseTypedInspector.cs" />
     <Compile Include="TypeInspectors\DictionaryTypeInspector.cs" />
     <Compile Include="TypeInspectors\EnumerableTypeInspector.cs" />

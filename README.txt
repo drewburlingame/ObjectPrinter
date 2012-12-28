@@ -46,24 +46,27 @@ followed by inherited fields and properties, then the stack trace,
 and finally the Data dictionary. This gives a consistent view
 of exceptions so you'll always know where to look.
 
-The type inspectors can be overridden by setting the ObjectPrinterConfig.GetInspectors delegate.  
+The type inspectors can be overridden by setting the ObjectPrinterConfig.GetInspectors delegate
+or changing the static ObjectPrinterConfig.DefaultTypeInspectors property. 
+
 The default implementation is:
 
-    public static Func<IEnumerable<ITypeInspector>> GetInspectors =
-			() => new List<ITypeInspector>
-			      	{
-		                new EnumTypeInspector(),
-                        new XmlNodeTypeInspector(), 
-                        new DictionaryTypeInspector(), 
-                        new NameValueCollectionTypeInspector(), 
-                        new EnumerableTypeInspector(), 
-		                new ExceptionTypeInspector(),
-			      		new ToStringTypeInspector { ShouldInspectType = Funcs.IncludeMsBuiltInNamespaces },
-			      		new InspectAllTypeInspector(),
-			      	};
-    public static ITypeInspector DefaultTypeInspector = new DefaultTypeInspector();
+    public static Func<IEnumerable<ITypeInspector>> GetInspectors = ObjectPrinterConfig.DefaultTypeInspectors;
+	public static IEnumerable<ITypeInspector> DefaultTypeInspectors = new TypeInspectorsRegistration().GetRegisteredInspectors();
 
 A type inspector can define a specific type inspector to use for any members it returns.
+
+calling TypeInspectorsRegistration().GetRegisteredInspectors() without registering
+inspectors or overriding existing inspectors will return these inspectors in this order:
+
+		new EnumTypeInspector(),
+		new ExceptionTypeInspector(),
+		new XmlNodeTypeInspector(), 
+		new DictionaryTypeInspector(), 
+		new NameValueCollectionTypeInspector(), 
+		new EnumerableTypeInspector(), 
+		new ToStringTypeInspector { ShouldInspectType = Funcs.IncludeMsBuiltInNamespaces },
+		new InspectAllTypeInspector(), //from ObjectPrinterConfig.CatchAllTypeInspector
 
 Another example of a custom type inspector would be for your ORM 
 entities.  The inspector could be smart enough to prevent the entity
