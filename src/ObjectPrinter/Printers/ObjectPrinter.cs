@@ -117,11 +117,12 @@ namespace ObjectPrinter.Printers
 
 			_objStack.Push(objToAppend);
 
-            if (objToAppend is string)
+		    var stringToAppend = objToAppend as string;
+		    if (stringToAppend != null)
             {
                 //in case the string contains line returns, the next line will be indented from the member name
                 _output.Indent();
-                _output.Write((string)objToAppend);
+                _output.Write(stringToAppend);
                 _output.Outdent();
             }
 			else

@@ -8,8 +8,6 @@ namespace ObjectPrinter.Printers
     {
         private readonly IndentableTextWriter _output;
         private readonly Action<ObjectInfo> _write;
-        private bool _isEmpty;
-        private IEnumerable<ObjectInfo> _objToAppend;
 
         public ObjectInfosPrinter(IndentableTextWriter output, Action<ObjectInfo> write)
         {
@@ -19,15 +17,22 @@ namespace ObjectPrinter.Printers
             _write = write;
         }
 
-        internal void Write(IEnumerable<ObjectInfo> objToAppend)
+        public void Write(IEnumerable<ObjectInfo> objToAppend)
         {
-            _objToAppend = objToAppend;
             //makes the print prettier.  needed because IEnumerable has no Count or Length property
-            _isEmpty = true;
+            var isEmpty = true;
 
-            Traverse();
+            foreach (var obj in objToAppend)
+            {
+                if (isEmpty)
+                {
+                    StartChildWrapper();
+                    isEmpty = false;
+                }
+                _write(obj);
+            }
 
-            if (_isEmpty)
+            if (isEmpty)
             {
                 WriteEmptyChildren();
             }
@@ -37,37 +42,19 @@ namespace ObjectPrinter.Printers
             }
         }
 
-        protected void Traverse()
+        private void WriteEmptyChildren()
         {
-            if (_objToAppend == null)
-            {
-                return;
-            }
-
-            foreach (var obj in _objToAppend)
-            {
-                if (_isEmpty)
-                {
-                    StartChildWrapper();
-                    _isEmpty = false;
-                }
-                _write(obj);
-            }
+            _output.Write("{}");
         }
 
-        protected void WriteEmptyChildren()
-        {
-            _output.WriteLine("{}");
-        }
-
-        protected void StartChildWrapper()
+        private void StartChildWrapper()
         {
             _output.WriteLine();
             _output.WriteLine("{");
             _output.Indent();
         }
 
-        protected void EndChildWrapper()
+        private void EndChildWrapper()
         {
             _output.Outdent();
             //no need to writeline because the object itself will 

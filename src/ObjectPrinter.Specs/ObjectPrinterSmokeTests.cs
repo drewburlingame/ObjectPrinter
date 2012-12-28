@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using FluentAssertions;
@@ -33,7 +35,66 @@ namespace ObjectPrinter.Specs
 		    //Console.Out.WriteLine(output);
 		}
 
-	    [Test]
+        [Test]
+        public void SmokeTest_empty_collections()
+        {
+            var stringWithReturns = "this is\r\na string\n\twith tabs\nand returns";
+            var boringString = "i'm a bore";
+
+            var child1 = new ObjectPrintable
+            {
+                String = boringString,
+                Id = 17,
+            };
+            var child2 = new ObjectPrintable
+            {
+                String = stringWithReturns,
+                Id = 33
+            };
+
+            var parent = new ObjectPrintable("Whos your daddy?")
+            {
+                String = "Parent",
+                Id = 100,
+                Child = child1,
+                Array = new ObjectPrintable[0],
+                Dictionary = new Dictionary<int, ObjectPrintable>(),
+                Hashtable = new Hashtable(),
+                NVC = new NameValueCollection()
+            };
+
+            child1.Parent = parent;
+            child2.Parent = parent;
+
+            var expected = @"[ObjectPrintable]: hashcode { $ignore$ }
+{
+	ToString() : Whos your daddy?
+	String : Parent
+	Id : 100
+	Uri : {NULL}
+	Child : [ObjectPrintable]: hashcode { $ignore$ }
+	{
+		String : i'm a bore
+		Id : 17
+		Uri : {NULL}
+		Child : {NULL}
+		Parent : avoid circular loop for this [ObjectPrintable]: hashcode { $ignore$ }
+		Array : {NULL}
+		Dictionary : {NULL}
+		Hashtable : {NULL}
+		NVC : {NULL}
+	}
+	Parent : {NULL}
+	Array : [ObjectPrintable[]]: hashcode { $ignore$ }{}
+	Dictionary : [Dictionary`2]: hashcode { $ignore$ }{}
+	Hashtable : [Hashtable]: hashcode { $ignore$ }{}
+	NVC : [NameValueCollection]: hashcode { $ignore$ }{}
+}";
+
+            shouldBeSame(expected, parent);
+        }
+
+        [Test]
 		public void SmokeTest_general_use_case_including_recursion()
         {
             var stringWithReturns = "this is\r\na string\n\twith tabs\nand returns";
@@ -77,41 +138,40 @@ namespace ObjectPrinter.Specs
 			child1.Parent = parent;
 			child2.Parent = parent;
 
-			var actual = parent.DumpToString();
-            string expected = @"[ObjectPrintable]: hashcode { 100 }
+            string expected = @"[ObjectPrintable]: hashcode { $ignore$ }
 {
 	ToString() : Whos your daddy?
 	String : Parent
 	Id : 100
 	Uri : {NULL}
-	Child : [ObjectPrintable]: hashcode { 17 }
+	Child : [ObjectPrintable]: hashcode { $ignore$ }
 	{
 		String : i'm a bore
 		Id : 17
 		Uri : {NULL}
 		Child : {NULL}
-		Parent : avoid circular loop for this [ObjectPrintable]: hashcode { 100 }
+		Parent : avoid circular loop for this [ObjectPrintable]: hashcode { $ignore$ }
 		Array : {NULL}
 		Dictionary : {NULL}
 		Hashtable : {NULL}
 		NVC : {NULL}
 	}
 	Parent : {NULL}
-	Array : [ObjectPrintable[]]: hashcode { $Array_Hashcode$ }
+	Array : [ObjectPrintable[]]: hashcode { $ignore$ }
 	{
-		[ObjectPrintable]: hashcode { 17 }
+		[ObjectPrintable]: hashcode { $ignore$ }
 		{
 			String : i'm a bore
 			Id : 17
 			Uri : {NULL}
 			Child : {NULL}
-			Parent : avoid circular loop for this [ObjectPrintable]: hashcode { 100 }
+			Parent : avoid circular loop for this [ObjectPrintable]: hashcode { $ignore$ }
 			Array : {NULL}
 			Dictionary : {NULL}
 			Hashtable : {NULL}
 			NVC : {NULL}
 		}
-		[ObjectPrintable]: hashcode { 33 }
+		[ObjectPrintable]: hashcode { $ignore$ }
 		{
 			String : this is
 				a string
@@ -120,28 +180,28 @@ namespace ObjectPrinter.Specs
 			Id : 33
 			Uri : {NULL}
 			Child : {NULL}
-			Parent : avoid circular loop for this [ObjectPrintable]: hashcode { 100 }
+			Parent : avoid circular loop for this [ObjectPrintable]: hashcode { $ignore$ }
 			Array : {NULL}
 			Dictionary : {NULL}
 			Hashtable : {NULL}
 			NVC : {NULL}
 		}
 	}
-	Dictionary : [Dictionary`2]: hashcode { $Dictionary_Hashcode$ }
+	Dictionary : [Dictionary`2]: hashcode { $ignore$ }
 	{
-		17 : [ObjectPrintable]: hashcode { 17 }
+		17 : [ObjectPrintable]: hashcode { $ignore$ }
 		{
 			String : i'm a bore
 			Id : 17
 			Uri : {NULL}
 			Child : {NULL}
-			Parent : avoid circular loop for this [ObjectPrintable]: hashcode { 100 }
+			Parent : avoid circular loop for this [ObjectPrintable]: hashcode { $ignore$ }
 			Array : {NULL}
 			Dictionary : {NULL}
 			Hashtable : {NULL}
 			NVC : {NULL}
 		}
-		33 : [ObjectPrintable]: hashcode { 33 }
+		33 : [ObjectPrintable]: hashcode { $ignore$ }
 		{
 			String : this is
 				a string
@@ -150,28 +210,28 @@ namespace ObjectPrinter.Specs
 			Id : 33
 			Uri : {NULL}
 			Child : {NULL}
-			Parent : avoid circular loop for this [ObjectPrintable]: hashcode { 100 }
+			Parent : avoid circular loop for this [ObjectPrintable]: hashcode { $ignore$ }
 			Array : {NULL}
 			Dictionary : {NULL}
 			Hashtable : {NULL}
 			NVC : {NULL}
 		}
 	}
-	Hashtable : [Hashtable]: hashcode { $Hashtable_Hashcode$ }
+	Hashtable : [Hashtable]: hashcode { $ignore$ }
 	{
-		17 : [ObjectPrintable]: hashcode { 17 }
+		17 : [ObjectPrintable]: hashcode { $ignore$ }
 		{
 			String : i'm a bore
 			Id : 17
 			Uri : {NULL}
 			Child : {NULL}
-			Parent : avoid circular loop for this [ObjectPrintable]: hashcode { 100 }
+			Parent : avoid circular loop for this [ObjectPrintable]: hashcode { $ignore$ }
 			Array : {NULL}
 			Dictionary : {NULL}
 			Hashtable : {NULL}
 			NVC : {NULL}
 		}
-		33 : [ObjectPrintable]: hashcode { 33 }
+		33 : [ObjectPrintable]: hashcode { $ignore$ }
 		{
 			String : this is
 				a string
@@ -180,14 +240,14 @@ namespace ObjectPrinter.Specs
 			Id : 33
 			Uri : {NULL}
 			Child : {NULL}
-			Parent : avoid circular loop for this [ObjectPrintable]: hashcode { 100 }
+			Parent : avoid circular loop for this [ObjectPrintable]: hashcode { $ignore$ }
 			Array : {NULL}
 			Dictionary : {NULL}
 			Hashtable : {NULL}
 			NVC : {NULL}
 		}
 	}
-	NVC : [NameValueCollection]: hashcode { $NVC_Hashcode$ }
+	NVC : [NameValueCollection]: hashcode { $ignore$ }
 	{
 		stringWithReturns : this is
 			a string
@@ -195,23 +255,11 @@ namespace ObjectPrinter.Specs
 			and returns
 		boringString : i'm a bore
 	}
-}"
-.Replace("$Array_Hashcode$", parent.Array.GetHashCode().ToString())
-.Replace("$Dictionary_Hashcode$", parent.Dictionary.GetHashCode().ToString())
-.Replace("$Hashtable_Hashcode$", parent.Hashtable.GetHashCode().ToString())
-.Replace("$NVC_Hashcode$", parent.NVC.GetHashCode().ToString())
-;
-			//replace tabs & newlines to easily compare white spaces
-//			expected = expected.Replace(Environment.NewLine, "_n").Replace("\t", "_t");
-//			actual = actual.Replace(Environment.NewLine, "_n").Replace("\t", "_t");
-//			Console.Out.WriteLine(expected);
-//			Console.Out.WriteLine(actual);
-//			Console.Out.WriteLine(actual.Length);
-//			Console.Out.WriteLine(expected.Length);
-			actual.Should().Be(expected);
-		}
+}";
+			shouldBeSame(expected, parent);
+        }
 
-		[Test]
+        [Test]
 		public void ObjectPrinter_includes_public_fields_in_output()
 		{
 			var testObject = new ObjectWithPublicFields
@@ -238,8 +286,7 @@ namespace ObjectPrinter.Specs
             ex.SetContext("addl message", "some addl message");
             ex.SetContext("non-serializable-obj", new ObjectWithPublicFields{Id = 5, TestInteger = 10, TestString = "string"});
 
-            var actual = ex.DumpToString();
-            var expected = @"[Exception]: hashcode { $Exception_Hashcode$ }
+            var expected = @"[Exception]: hashcode { $ignore$ }
 {
 	Message : some ex
 	StackTrace : {NULL}
@@ -247,10 +294,10 @@ namespace ObjectPrinter.Specs
 	TargetSite : {NULL}
 	HelpLink : {NULL}
 	HResult : -2146233088
-	Data : [ListDictionaryInternal]: hashcode { $Data_Hashcode$ }
+	Data : [ListDictionaryInternal]: hashcode { $ignore$ }
 	{
 		addl message : some addl message
-		non-serializable-obj : [ObjectWithPublicFields]: hashcode { 5 }
+		non-serializable-obj : [ObjectWithPublicFields]: hashcode { $ignore$ }
 		{
 			Id : 5
 			TestInteger : 10
@@ -258,17 +305,28 @@ namespace ObjectPrinter.Specs
 		}
 	}
 	InnerException : {NULL}
-}"
-.Replace("$Exception_Hashcode$", ex.GetHashCode().ToString())
-.Replace("$Data_Hashcode$", ex.Data.GetHashCode().ToString());
+}";
 
-//replace tabs & newlines to easily compare white spaces
-//			expected = expected.Replace(Environment.NewLine, "_n").Replace("\t", "_t");
-//			actual = actual.Replace(Environment.NewLine, "_n").Replace("\t", "_t");
-//			Console.Out.WriteLine(expected);
-//			Console.Out.WriteLine(actual);
-//			Console.Out.WriteLine(actual.Length);
-//			Console.Out.WriteLine(expected.Length);
+            shouldBeSame(expected, ex);
+        }
+
+        private static void shouldBeSame(string expected, object objectToPrint)
+        {
+            var sb = new StringBuilder();
+            objectToPrint.DumpTo(new StringWriter(sb));
+            var actual = sb.ToString();
+
+            var hashcodesRegex = new Regex("hashcode { [0-9]* }");
+            actual = hashcodesRegex.Replace(actual, "hashcode { $ignore$ }");
+
+            //replace tabs & newlines to easily compare white spaces
+            //expected = expected.Replace(Environment.NewLine, "_n").Replace("\t", "_t");
+            //actual = actual.Replace(Environment.NewLine, "_n").Replace("\t", "_t");
+
+            //Console.Out.WriteLine("lengths: expected={0} actual={1}", expected.Length, actual.Length);
+            //Console.Out.WriteLine(expected);
+            //Console.Out.WriteLine(actual);
+
             actual.Should().Be(expected);
         }
 
