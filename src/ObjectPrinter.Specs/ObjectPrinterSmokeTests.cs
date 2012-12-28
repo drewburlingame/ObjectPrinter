@@ -11,17 +11,16 @@ using NUnit.Framework;
 namespace ObjectPrinter.Specs
 {
     [TestFixture]
-	public class ObjectPrinterTests
+	public class ObjectPrinterSmokeTests
     {
-        string _xmlString = "<bus:exception xmlns:bus=\"http://developer.cognos.com/schemas/bibus/3/\"><severity>error</severity><errorCode>cmBadProp</errorCode><bus:message><messageString>CM-REQ-4010 The property \"mobileDeviceID\" is unknown. Remove it or replace it with a valid property.</messageString></bus:message></bus:exception>";
-
 	    [Test]
 	    public void SmokeTest_XmlNode_should_return_inner_text()
-	    {
+        {
+            var xml = "<bus:exception xmlns:bus=\"http://developer.cognos.com/schemas/bibus/3/\"><severity>error</severity><errorCode>cmBadProp</errorCode><bus:message><messageString>CM-REQ-4010 The property \"mobileDeviceID\" is unknown. Remove it or replace it with a valid property.</messageString></bus:message></bus:exception>";
 	        var doc = new XmlDocument();
-	        doc.LoadXml(_xmlString);
+	        doc.LoadXml(xml);
 	        var output = doc.DumpToString();
-	        output.Should().Be(_xmlString);
+	        output.Should().Be(xml);
 	    }
 
 	    [Test]

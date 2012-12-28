@@ -61,7 +61,7 @@
     <Compile Include="given_flagged_enum.cs" />
     <Compile Include="IndentAwareTextWriterTests.cs" />
     <Compile Include="Log4NetObjectRendererTests.cs" />
-    <Compile Include="ObjectPrinterTests.cs" />
+    <Compile Include="ObjectPrinterSmokeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
