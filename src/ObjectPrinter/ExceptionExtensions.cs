@@ -22,7 +22,7 @@ namespace ObjectPrinter
 		    return (string) e.Data[CacheKey];
 		}
 
-	    public static void SetContext(this Exception e, string name, object context, bool ifNotSerializablePrintOnSerialize = false)
+	    public static void SetContext(this Exception e, string name, object context, bool ifNotSerializablePrintOnSerialize = true)
 		{
 			if (context != null && !context.GetType().IsSerializable)
 			{

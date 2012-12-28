@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ObjectPrinter.Utilties;
 
 namespace ObjectPrinter.TypeInspectors
 {
@@ -14,7 +15,14 @@ namespace ObjectPrinter.TypeInspectors
 
         public IEnumerable<ObjectInfo> GetMemberList(object objectToInspect, Type typeOfObjectToInspect)
         {
-            return OnGetMemberList((T) objectToInspect, typeOfObjectToInspect);
+            return OnGetMemberList((T) objectToInspect, typeOfObjectToInspect)
+                .ForEach(o =>
+                    {
+                        if (o.Value is NonSerializableWrapper)
+                        {
+                            o.Value = ((NonSerializableWrapper) o.Value).Context;
+                        }
+                    });
         }
     }
 }

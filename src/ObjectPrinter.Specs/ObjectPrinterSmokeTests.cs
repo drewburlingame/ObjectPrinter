@@ -231,6 +231,47 @@ namespace ObjectPrinter.Specs
 }");
 		}
 
+        [Test]
+        public void given_NonSerializableWrapper_only_context_is_printed()
+        {
+            var ex = new Exception("some ex");
+            ex.SetContext("addl message", "some addl message");
+            ex.SetContext("non-serializable-obj", new ObjectWithPublicFields{Id = 5, TestInteger = 10, TestString = "string"});
+
+            var actual = ex.DumpToString();
+            var expected = @"[Exception]: hashcode { $Exception_Hashcode$ }
+{
+	Message : some ex
+	StackTrace : {NULL}
+	Source : {NULL}
+	TargetSite : {NULL}
+	HelpLink : {NULL}
+	HResult : -2146233088
+	Data : [ListDictionaryInternal]: hashcode { $Data_Hashcode$ }
+	{
+		addl message : some addl message
+		non-serializable-obj : [ObjectWithPublicFields]: hashcode { 5 }
+		{
+			Id : 5
+			TestInteger : 10
+			TestString : string
+		}
+	}
+	InnerException : {NULL}
+}"
+.Replace("$Exception_Hashcode$", ex.GetHashCode().ToString())
+.Replace("$Data_Hashcode$", ex.Data.GetHashCode().ToString());
+
+//replace tabs & newlines to easily compare white spaces
+//			expected = expected.Replace(Environment.NewLine, "_n").Replace("\t", "_t");
+//			actual = actual.Replace(Environment.NewLine, "_n").Replace("\t", "_t");
+//			Console.Out.WriteLine(expected);
+//			Console.Out.WriteLine(actual);
+//			Console.Out.WriteLine(actual.Length);
+//			Console.Out.WriteLine(expected.Length);
+            actual.Should().Be(expected);
+        }
+
 		public class ObjectPrintable
 		{
 			private readonly string _customToString;

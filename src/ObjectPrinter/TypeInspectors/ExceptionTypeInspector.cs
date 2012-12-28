@@ -20,13 +20,6 @@ namespace ObjectPrinter.TypeInspectors
 		{
 			return base.GetMemberList(objectToInspect, typeOfObjectToInspect)
 				.Where(p => !p.Name.StartsWith("ToString"))
-				.ForEach(p =>
-				         	{
-								if(p.Value is NonSerializableWrapper)
-								{
-									p.Value = ((NonSerializableWrapper)p.Value).Context;
-								}
-				         	})
 				.OrderBy(Rank);
 		}
 
