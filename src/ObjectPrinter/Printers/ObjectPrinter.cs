@@ -42,6 +42,14 @@ namespace ObjectPrinter.Printers
 
         public void PrintTo(TextWriter output)
         {
+            var ex = _rootObject as Exception;
+            var useCache = _config.EnableExceptionCaching && ex != null;
+            if (useCache && ex.Data.Contains(CacheKey))
+            {
+                output.Write((string)ex.Data[CacheKey]);
+                return;
+            }
+
             _output = new IndentableTextWriter(output, _tab, _newline);
             _objectInfosPrinter = new ObjectInfosPrinter(_output, AppendValue);
             WriteObject(new ObjectInfo { Value = _rootObject });
