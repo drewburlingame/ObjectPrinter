@@ -9,7 +9,8 @@ using ObjectPrinter.Utilties;
 namespace ObjectPrinter.Printers
 {
 	public class ObjectPrinter
-	{
+    {
+        public const string CacheKey = "ObjectPrinterDumpToStringCache";
 		private const string NullValue = "{NULL}";
 
 		/// <summary>The default config to use.</summary>
@@ -47,7 +48,14 @@ namespace ObjectPrinter.Printers
         }
 
 	    public string PrintToString()
-        {
+	    {
+	        var ex = _rootObject as Exception;
+	        var useCache = _config.EnableExceptionCaching && ex != null;
+	        if (useCache && ex.Data.Contains(CacheKey))
+            {
+                return (string)ex.Data[CacheKey];
+            }
+
             var sb = new StringBuilder();
 			try
             {
@@ -70,7 +78,13 @@ namespace ObjectPrinter.Printers
 				e.Data["ObjectPrinter Partial Output"] = partialOutput;
 				throw;
 			}
-			return sb.ToString();
+
+	        var result = sb.ToString();
+            if (useCache)
+            {
+                ex.Data[CacheKey] = result;
+            }
+	        return result;
 		}
 
 		private void WriteObject(ObjectInfo objectInfo)
@@ -169,7 +183,7 @@ namespace ObjectPrinter.Printers
 				return true;
 			}
 
-			members = objectInfo.Inspector.GetMemberList(objectInfo).ToList();
+			members = objectInfo.Inspector.GetMemberList(objectInfo).Where(info => info.Name != CacheKey).ToList();
 			if (members.Count == 1 && (members[0].Value == null || members[0].Value is string))
 			{
 				singleValue = members[0].Value;
