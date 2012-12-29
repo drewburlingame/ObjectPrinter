@@ -31,6 +31,11 @@ namespace ObjectPrinter
 	    ///</summary>
 		public static bool DefaultIncludeLogging = false;
 
+        /// <summary>
+        /// The default setting for caching Exception output
+        /// </summary>
+        public static bool DefaultEnableExceptionCaching = false;
+
         public static IEnumerable<ITypeInspector> DefaultTypeInspectors =
             new TypeInspectorsRegistration().GetRegisteredInspectors();
 
@@ -68,7 +73,16 @@ namespace ObjectPrinter
         /// When true, the inspector used for an object is specified in the output.
         /// If not specified, DefaultIncludeLogging (false) is used.
         ///</summary>
-		public bool IncludeLogging { get; set; }
+        public bool IncludeLogging { get; set; }
+
+        /// <summary>
+        /// When true an exception is being dumped to string, 
+        /// the output will be cached in the Data property of the exception.
+        /// For short lived exceptions with a lot of context, this can save considerable time.
+        /// For long lived exceptions, it may be preferable to not take up the memory.
+        /// For exceptions with little context, it may be cheap enough to dump again.
+        /// </summary>
+        public bool EnableExceptionCaching { get; set; }
 
 		/// <summary>
 		/// The type inspectors to be used during the printing of an object.
@@ -86,6 +100,7 @@ namespace ObjectPrinter
 			NewLine = DefaultNewLine;
 			MaxDepth = DefaultMaxDepth;
 			IncludeLogging = DefaultIncludeLogging;
+	        EnableExceptionCaching = DefaultEnableExceptionCaching;
 		}
 
 

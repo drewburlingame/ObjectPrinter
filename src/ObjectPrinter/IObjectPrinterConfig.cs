@@ -31,6 +31,16 @@ namespace ObjectPrinter
         /// If not specified, DefaultIncludeLogging (false) is used.
         ///</summary>
 		bool IncludeLogging { get; }
-		ITypeInspector GetInspector(object objectToInspect, Type typeOfObjectToInspect);
+
+	    /// <summary>
+	    /// When true an exception is being dumped to string, 
+	    /// the output will be cached in the Data property of the exception.
+	    /// For short lived exceptions with a lot of context, this can save considerable time.
+	    /// For long lived exceptions, it may be preferable to not take up the memory.
+	    /// For exceptions with little context, it may be cheap enough to dump again.
+	    /// </summary>
+	    bool EnableExceptionCaching { get; set; }
+
+	    ITypeInspector GetInspector(object objectToInspect, Type typeOfObjectToInspect);
 	}
 }
