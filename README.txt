@@ -78,9 +78,9 @@ Log4Net:
 add the following as the first element in the log4net config section to use the ObjectPrinter 
 for all objects passed to the logger
 
-	<renderer renderingClass="ObjectPrinter.Log4Net.Log4NetObjectRenderer, ObjectPrinter" renderedClass="System.Object" />
+	<renderer renderingClass="ObjectPrinter.Log4Net.Log4NetObjectRenderer, ObjectPrinter.Log4Net" renderedClass="System.Object" />
 or
-	<renderer renderingClass="ObjectPrinter.Log4Net.Log4NetObjectRenderer, ObjectPrinter" renderedClass="System.Exception" />
+	<renderer renderingClass="ObjectPrinter.Log4Net.Log4NetObjectRenderer, ObjectPrinter.Log4Net" renderedClass="System.Exception" />
 
 It may not work if it's not the first line in the config.
 
