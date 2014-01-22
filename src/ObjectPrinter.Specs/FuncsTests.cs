@@ -20,5 +20,12 @@ namespace ObjectPrinter.Specs
 			Funcs.ExcludeNamespaces("System")(null, typeof(DateTime)).Should().Be(false);
 			Funcs.ExcludeNamespaces("System")(null, typeof(TestAttribute)).Should().Be(true);
 		}
+        [Test]
+        public void IncludeTypes()
+        {
+            var someObj = new TestAttribute();
+            Funcs.IncludeTypes(false, typeof(Object))(someObj, someObj.GetType()).Should().BeFalse();
+            Funcs.IncludeTypes(true, typeof(Object))(someObj, someObj.GetType()).Should().BeTrue();
+        }
 	}
 }

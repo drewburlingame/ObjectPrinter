@@ -90,7 +90,7 @@ namespace ObjectPrinter.TypeInspectors
 
 		static bool IsTheTypeYoureLookingFor(Type typeToFind, Type type, bool inherit)
 		{
-			return inherit ? typeToFind == type : typeToFind.IsAssignableFrom(type);
+            return inherit ? typeToFind.IsAssignableFrom(type) : typeToFind == type;
 		}
 
 		public static Func<object, ObjectInfo, bool> ExcludeNullMembers
