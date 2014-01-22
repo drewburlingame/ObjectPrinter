@@ -8,9 +8,13 @@ namespace ObjectPrinter.Utilties
     {
         private readonly BindingFlags _bindingFlags;
 
-        readonly Dictionary<Type, IEnumerable<PropertyInfo>> _propertyCache = new Dictionary<Type, IEnumerable<PropertyInfo>>();
-        readonly Dictionary<Type, IEnumerable<FieldInfo>> _fieldCache = new Dictionary<Type, IEnumerable<FieldInfo>>();
-        readonly Dictionary<Type, IEnumerable<MethodInfo>> _methodCache = new Dictionary<Type, IEnumerable<MethodInfo>>();
+        private Dictionary<Type, IEnumerable<PropertyInfo>> _propertyCache = new Dictionary<Type, IEnumerable<PropertyInfo>>();
+        private Dictionary<Type, IEnumerable<FieldInfo>> _fieldCache = new Dictionary<Type, IEnumerable<FieldInfo>>();
+        private Dictionary<Type, IEnumerable<MethodInfo>> _methodCache = new Dictionary<Type, IEnumerable<MethodInfo>>();
+
+        private readonly object _propertyLockObj = new object();
+        private readonly object _fieldLockObj = new object();
+        private readonly object _methodLockObj = new object();
 
         public MemberCache(BindingFlags bindingFlags)
         {
@@ -19,33 +23,76 @@ namespace ObjectPrinter.Utilties
 
         public IEnumerable<PropertyInfo> GetProperties(Type type)
         {
-            return Get(type, _propertyCache, () => type.GetProperties(_bindingFlags));
-        }
-        public IEnumerable<FieldInfo> GetFields(Type type)
-        {
-            return Get(type, _fieldCache, () => type.GetFields(_bindingFlags));
-        }
-        public IEnumerable<MethodInfo> GetMethods(Type type)
-        {
-            return Get(type, _methodCache, () => type.GetMethods(_bindingFlags));
-        }
+            IEnumerable<PropertyInfo> members;
 
-        private IEnumerable<TMember> Get<TMember>(
-            Type type, 
-            Dictionary<Type, IEnumerable<TMember>> cache,
-            Func<IEnumerable<TMember>> getMembers)
-        {
-            IEnumerable<TMember> members;
-
-            lock (cache)
+            if (!_propertyCache.TryGetValue(type, out members))
             {
-                if (!cache.TryGetValue(type, out members))
+                lock (_propertyLockObj)
                 {
-                    cache[type] = members = getMembers();
+                    if (!_propertyCache.TryGetValue(type, out members))
+                    {
+                        var newCache = new Dictionary<Type, IEnumerable<PropertyInfo>>(_propertyCache);
+                        newCache[type] = members = type.GetProperties(_bindingFlags);
+                        _propertyCache = newCache;
+                    }
                 }
             }
 
             return members;
+        }
+        public IEnumerable<FieldInfo> GetFields(Type type)
+        {
+            IEnumerable<FieldInfo> members;
+
+            if (!_fieldCache.TryGetValue(type, out members))
+            {
+                lock (_fieldLockObj)
+                {
+                    if (!_fieldCache.TryGetValue(type, out members))
+                    {
+                        var newCache = new Dictionary<Type, IEnumerable<FieldInfo>>(_fieldCache);
+                        newCache[type] = members = type.GetFields(_bindingFlags);
+                        _fieldCache = newCache;
+                    }
+                }
+            }
+
+            return members;
+        }
+        public IEnumerable<MethodInfo> GetMethods(Type type)
+        {
+            IEnumerable<MethodInfo> members;
+
+            if (!_methodCache.TryGetValue(type, out members))
+            {
+                lock (_methodLockObj)
+                {
+                    if (!_methodCache.TryGetValue(type, out members))
+                    {
+                        var newCache = new Dictionary<Type, IEnumerable<MethodInfo>>(_methodCache);
+                        newCache[type] = members = type.GetMethods(_bindingFlags);
+                        _methodCache = newCache;
+                    }
+                }
+            }
+
+            return members;
+        }
+
+        public void Clear()
+        {
+            lock (_propertyLockObj)
+            {
+                _propertyCache.Clear();
+            }
+            lock (_fieldLockObj)
+            {
+                _fieldCache.Clear();
+            }
+            lock (_methodLockObj)
+            {
+                _methodCache.Clear();
+            }
         }
     }
 }

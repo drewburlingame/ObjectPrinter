@@ -7,7 +7,7 @@ namespace ObjectPrinter.Utilties
     ///<summary>Big Al (Alzheimers) doesn't remember a thing.  No caching happens here.</summary>
     public class BigAlMemberCache : IMemberCache
     {
-        private BindingFlags _bindingFlags;
+        private readonly BindingFlags _bindingFlags;
 
         public BigAlMemberCache(BindingFlags bindingFlags)
         {
@@ -27,6 +27,11 @@ namespace ObjectPrinter.Utilties
         public IEnumerable<MethodInfo> GetMethods(Type type)
         {
             return type.GetMethods(_bindingFlags);
+        }
+
+        public void Clear()
+        {
+            /*no op*/
         }
     }
 }

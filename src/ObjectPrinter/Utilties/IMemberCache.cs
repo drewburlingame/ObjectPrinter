@@ -9,5 +9,6 @@ namespace ObjectPrinter.Utilties
         IEnumerable<PropertyInfo> GetProperties(Type type);
         IEnumerable<FieldInfo> GetFields(Type type);
         IEnumerable<MethodInfo> GetMethods(Type type);
+        void Clear();
     }
 }
