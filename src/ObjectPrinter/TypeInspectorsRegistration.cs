@@ -15,9 +15,9 @@ namespace ObjectPrinter
     /// </summary>
     public class TypeInspectorsRegistration
     {
-        readonly List<ITypeInspector> inspectors = new List<ITypeInspector>();
+        readonly List<ITypeInspector> _inspectors = new List<ITypeInspector>();
 
-        /// <summary>in order: XmlNode, Dictionar, NameValueCollection & Enumerable</summary>
+        /// <summary>unless overridden, in order: XmlNode, Dictionar, NameValueCollection & Enumerable</summary>
         public static IEnumerable<ITypeInspector> DefaultEnumerableInspectors = new ITypeInspector[]
             {
                 new XmlNodeTypeInspector(), 
@@ -26,8 +26,14 @@ namespace ObjectPrinter
                 new EnumerableTypeInspector(), 
             };
 
-        private ITypeInspector _enumTypeInspector;
-        private ITypeInspector _exceptionTypeInspector;
+        /// <summary>unless overridden: EnumTypeInspector</summary>
+        public static ITypeInspector DefaultEnumTypeInspector = new EnumTypeInspector();
+
+        /// <summary>unless overridden: ExceptionTypeInspector</summary>
+        public static ITypeInspector DefaultExceptionTypeInspector = new ExceptionTypeInspector();
+
+        private ITypeInspector _enumTypeInspector = DefaultEnumTypeInspector;
+        private ITypeInspector _exceptionTypeInspector = DefaultExceptionTypeInspector;
         private ITypeInspector[] _enumerableTypeInspectors;
 
         private bool _inspectAllMsTypes;
@@ -66,21 +72,21 @@ namespace ObjectPrinter
         public TypeInspectorsRegistration RegisterInspector(ITypeInspector inspector)
         {
             if (inspector == null) throw new ArgumentNullException("inspector");
-            inspectors.Add(inspector);
+            _inspectors.Add(inspector);
             return this;
         }
 
         public IEnumerable<ITypeInspector> GetRegisteredInspectors()
         {
-            yield return _enumTypeInspector ?? new EnumTypeInspector();
-            yield return _exceptionTypeInspector ?? new ExceptionTypeInspector();
+            yield return _enumTypeInspector ?? DefaultEnumTypeInspector;
+            yield return _exceptionTypeInspector ?? DefaultExceptionTypeInspector;
 
             foreach (var inspector in _enumerableTypeInspectors ?? DefaultEnumerableInspectors)
             {
                 yield return inspector;
             }
 
-            foreach (var inspector in inspectors)
+            foreach (var inspector in _inspectors)
             {
                 yield return inspector;
             }
