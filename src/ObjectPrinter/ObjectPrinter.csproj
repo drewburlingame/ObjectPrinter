@@ -52,6 +52,7 @@
     <Compile Include="TypeInspectors\NameValueCollectionTypeInspector.cs" />
     <Compile Include="TypeInspectors\XmlNodeTypeInspector.cs" />
     <Compile Include="Utilties\LazyString.cs" />
+    <Compile Include="Utilties\MemberCacheFactory.cs" />
     <Compile Include="Utilties\NonSerializableWrapper.cs" />
     <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Printers\ObjectInfosPrinter.cs" />

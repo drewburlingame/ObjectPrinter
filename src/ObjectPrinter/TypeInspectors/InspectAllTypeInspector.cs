@@ -29,17 +29,30 @@ namespace ObjectPrinter.TypeInspectors
 
 	    private IMemberCache _memberCache;
 	    private BindingFlags _memberBindingFlags;
+	    private bool _enableCaching;
 
-        public bool EnableCaching { get; set; }
+	    public bool EnableCaching
+	    {
+	        get { return _enableCaching; }
+	        set
+	        {
+	            _enableCaching = value;
+	            ResetCache();
+	        }
+	    }
+
+	    private void ResetCache()
+	    {
+	        _memberCache = MemberCacheFactory.Instance.Get(_enableCaching, _memberBindingFlags);
+	    }
+
 	    public BindingFlags MemberBindingFlags
 	    {
 	        get { return _memberBindingFlags; }
 	        set
 	        {
 	            _memberBindingFlags = value;
-                _memberCache = EnableCaching 
-                    ? (IMemberCache) new MemberCache(value) 
-                    : new BigAlMemberCache(value);
+                ResetCache();
 	        }
 	    }
 
