@@ -72,14 +72,11 @@ namespace ObjectPrinter.Utilties
 
         private void WriteTabs()
         {
-            if (_tabsNext)
+            for (int i = 0; i < _tabDepth; i++)
             {
-                for (int i = 0; i < _tabDepth; i++)
-                {
-                    _innerWriter.Write(_tab);
-                }
-                _tabsNext = false;
+                _innerWriter.Write(_tab);
             }
+            _tabsNext = false;
         }
 
         public override Encoding Encoding
