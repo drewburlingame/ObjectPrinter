@@ -19,7 +19,7 @@ Dump an object using log4net
 3. Log.Error(ex);
 
 
-Capturing more context in an excecption
+Capturing more context in an exception
 
 ```csharp
 try
