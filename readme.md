@@ -33,11 +33,11 @@ Another example of a custom type inspector would be for your ORM entities.  The 
 add the following as the first element in the log4net config section to use the ObjectPrinter 
 for all objects passed to the logger
 ```
-	<renderer renderingClass="ObjectPrinter.Log4Net.Log4NetObjectRenderer, ObjectPrinter" renderedClass="System.Object" />
+	<renderer renderingClass="ObjectPrinter.Log4Net.Log4NetObjectRenderer, ObjectPrinter.Log4Net.v1212" renderedClass="System.Object" />
 ```
 or
 ```
-	<renderer renderingClass="ObjectPrinter.Log4Net.Log4NetObjectRenderer, ObjectPrinter" renderedClass="System.Exception" />
+	<renderer renderingClass="ObjectPrinter.Log4Net.Log4NetObjectRenderer, ObjectPrinter.Log4Net.v1212" renderedClass="System.Exception" />
 ```
 
 It may not work if it's not the first line in the config.
