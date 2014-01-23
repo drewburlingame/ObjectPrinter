@@ -8,8 +8,20 @@ namespace ObjectPrinter
 		private Type _type;
 		private object _value;
 		public string Name { get; set; }
-		public ITypeInspector Inspector { get; set; }
-		public object Value
+        public ITypeInspector Inspector { get; set; }
+
+        public ObjectInfo(object value)
+        {
+            _value = value;
+        }
+
+	    public ObjectInfo(string name, object value)
+        {
+            Name = name;
+	        _value = value;
+	    }
+
+	    public object Value
 		{
 			get { return _value; } 
 			set { _value = value; _type = null; }

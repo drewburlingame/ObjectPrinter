@@ -10,7 +10,7 @@ namespace ObjectPrinter.TypeInspectors
         {
             for (int i = 0; i < objectToInspect.Count; i++)
             {
-                yield return new ObjectInfo { Name = objectToInspect.Keys[i], Value = objectToInspect[i] };
+                yield return new ObjectInfo(objectToInspect.Keys[i], objectToInspect[i]);
             }
         }
     }

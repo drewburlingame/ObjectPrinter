@@ -10,7 +10,7 @@ namespace ObjectPrinter.TypeInspectors
         protected override IEnumerable<ObjectInfo> OnGetMemberList(IEnumerable objectToInspect, Type typeOfObjectToInspect)
         {
             return from Object obj in objectToInspect
-                   select new ObjectInfo { Value = obj };
+                   select new ObjectInfo(obj);
         }
     }
 }

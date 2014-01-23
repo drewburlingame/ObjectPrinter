@@ -105,29 +105,21 @@ namespace ObjectPrinter.TypeInspectors
 				var toString = objectToInspect.ToString();
 				if (string.CompareOrdinal(toString, objectToInspect.GetType().ToString()) != 0)
 				{
-					members.Add(new ObjectInfo {Name = "ToString()", Value = toString});
+					members.Add(new ObjectInfo("ToString()", toString));
 				}
 			}
 
 		    members.AddRange(
 		        cache.GetProperties(type)
 		                    .Where(m => ShouldEvaluate(objectToInspect, m))
-		                    .Select(p => new ObjectInfo
-		                        {
-		                            Name = p.Name,
-		                            Value = ParsePropertyInfo(objectToInspect, p)
-		                        })
+		                    .Select(p => new ObjectInfo(p.Name, ParsePropertyInfo(objectToInspect, p)))
 		                    .Where(o => ShouldInclude(objectToInspect, o))
 		        );
 
 		    members.AddRange(
                 cache.GetFields(type)
 		                    .Where(m => ShouldEvaluate(objectToInspect, m))
-		                    .Select(f => new ObjectInfo
-		                        {
-		                            Name = f.Name,
-		                            Value = ParseFieldInfo(objectToInspect, f)
-		                        })
+		                    .Select(f => new ObjectInfo(f.Name, ParseFieldInfo(objectToInspect, f)))
 		                    .Where(o => ShouldInclude(objectToInspect, o))
 		        );
 
@@ -136,11 +128,7 @@ namespace ObjectPrinter.TypeInspectors
 			    members.AddRange(
                     cache.GetMethods(type)
 			                    .Where(m => ShouldEvaluate(objectToInspect, m))
-			                    .Select(m => new ObjectInfo
-			                        {
-			                            Name = m.Name,
-			                            Value = ParseMethodInfo(objectToInspect, m)
-			                        })
+			                    .Select(m => new ObjectInfo(m.Name, ParseMethodInfo(objectToInspect, m)))
 			                    .Where(o => ShouldInclude(objectToInspect, o))
 			        );
 			}

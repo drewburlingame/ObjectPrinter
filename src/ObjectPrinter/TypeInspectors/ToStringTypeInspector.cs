@@ -20,10 +20,7 @@ namespace ObjectPrinter.TypeInspectors
 		{
 			return new List<ObjectInfo>
 			       	{
-			       		new ObjectInfo
-			       			{
-			       				Value = objectToInspect.ToString()
-			       			}
+			       		new ObjectInfo(objectToInspect.ToString())
 			       	};
 		}
 	}

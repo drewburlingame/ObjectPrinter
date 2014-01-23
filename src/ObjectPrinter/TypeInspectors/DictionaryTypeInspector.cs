@@ -11,7 +11,7 @@ namespace ObjectPrinter.TypeInspectors
         {
             foreach (DictionaryEntry entry in objectToInspect)
             {
-                yield return new ObjectInfo { Name = entry.Key.ToString(), Value = entry.Value };
+                yield return new ObjectInfo(entry.Key.ToString(), entry.Value);
             }
         }
     }

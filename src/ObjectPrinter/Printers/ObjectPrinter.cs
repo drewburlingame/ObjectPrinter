@@ -52,7 +52,7 @@ namespace ObjectPrinter.Printers
 
             _output = new IndentableTextWriter(output, _tab, _newline);
             _objectInfosPrinter = new ObjectInfosPrinter(_output, AppendValue);
-            WriteObject(new ObjectInfo { Value = _rootObject });
+            WriteObject(new ObjectInfo(_rootObject));
         }
 
 	    public string PrintToString()

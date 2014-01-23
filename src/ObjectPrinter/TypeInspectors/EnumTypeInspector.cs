@@ -31,12 +31,7 @@ namespace ObjectPrinter.TypeInspectors
 
 			return new List<ObjectInfo>
 			       	{
-			       		new ObjectInfo
-			       			{
-			       				Value = typeOfObjectToInspect.Name
-			       				        + "."
-			       				        + enumValues
-			       			}
+			       		new ObjectInfo(typeOfObjectToInspect.Name + "." + enumValues)
 			       	};
 		}
 	}

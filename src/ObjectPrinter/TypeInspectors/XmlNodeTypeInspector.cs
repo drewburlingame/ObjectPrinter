@@ -8,7 +8,7 @@ namespace ObjectPrinter.TypeInspectors
     {
         protected override IEnumerable<ObjectInfo> OnGetMemberList(XmlNode objectToInspect, Type typeOfObjectToInspect)
         {
-            yield return new ObjectInfo{Value = objectToInspect.InnerXml};
+            yield return new ObjectInfo(objectToInspect.InnerXml);
         }
     }
 }
