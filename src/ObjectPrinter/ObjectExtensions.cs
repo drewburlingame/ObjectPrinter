@@ -25,5 +25,13 @@ namespace ObjectPrinter
 		{
             return new LazyString(() => new Printers.ObjectPrinter(obj, config ?? Printers.ObjectPrinter.GetDefaultContext()).PrintToString());
 		}
+
+        ///<summary>
+        /// Same as Dump, but less likely to conflict with Dump extension methods from other assemblies.
+        /// </summary>
+        public static LazyString LazyDump(this object obj, IObjectPrinterConfig config = null)
+        {
+            return new LazyString(() => new Printers.ObjectPrinter(obj, config ?? Printers.ObjectPrinter.GetDefaultContext()).PrintToString());
+        }
 	}
 }
