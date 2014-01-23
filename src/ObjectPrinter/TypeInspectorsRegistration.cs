@@ -17,24 +17,19 @@ namespace ObjectPrinter
     {
         readonly List<ITypeInspector> _inspectors = new List<ITypeInspector>();
 
-        /// <summary>unless overridden, in order: XmlNode, Dictionar, NameValueCollection & Enumerable</summary>
-        public static IEnumerable<ITypeInspector> DefaultEnumerableInspectors = new ITypeInspector[]
+        private static readonly ITypeInspector DefaultEnumTypeInspector = new EnumTypeInspector();
+        private static readonly ITypeInspector DefaultExceptionTypeInspector = new ExceptionTypeInspector();
+        private static readonly ITypeInspector[] DefaultEnumerableInspectors = new ITypeInspector[]
             {
                 new XmlNodeTypeInspector(), 
                 new DictionaryTypeInspector(), 
                 new NameValueCollectionTypeInspector(), 
-                new EnumerableTypeInspector(), 
+                new EnumerableTypeInspector()
             };
-
-        /// <summary>unless overridden: EnumTypeInspector</summary>
-        public static ITypeInspector DefaultEnumTypeInspector = new EnumTypeInspector();
-
-        /// <summary>unless overridden: ExceptionTypeInspector</summary>
-        public static ITypeInspector DefaultExceptionTypeInspector = new ExceptionTypeInspector();
 
         private ITypeInspector _enumTypeInspector = DefaultEnumTypeInspector;
         private ITypeInspector _exceptionTypeInspector = DefaultExceptionTypeInspector;
-        private ITypeInspector[] _enumerableTypeInspectors;
+        private ITypeInspector[] _enumerableTypeInspectors = DefaultEnumerableInspectors;
 
         private bool _inspectAllMsTypes;
 
@@ -96,7 +91,7 @@ namespace ObjectPrinter
                 yield return new ToStringTypeInspector {ShouldInspectType = Funcs.IncludeMsBuiltInNamespaces};
             }
 
-            yield return ObjectPrinterConfig.CatchAllTypeInspector;
+            yield return Config.Inspectors.CatchAllTypeInspector;
         }
     }
 }

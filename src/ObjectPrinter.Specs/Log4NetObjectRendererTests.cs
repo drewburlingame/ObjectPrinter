@@ -16,12 +16,12 @@ namespace ObjectPrinter.Specs
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
-			ObjectPrinterConfig.DefaultIncludeLogging = true;
+			Config.Printer.IncludeLogging = true;
 		}
 		[TestFixtureTearDown]
 		public void FixtureTearDown()
 		{
-			ObjectPrinterConfig.DefaultIncludeLogging = false;
+			Config.Printer.IncludeLogging = false;
 		}
 
 		[Test]

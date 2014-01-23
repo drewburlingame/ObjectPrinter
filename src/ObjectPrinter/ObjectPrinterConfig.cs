@@ -7,57 +7,19 @@ namespace ObjectPrinter
 {
     public class ObjectPrinterConfig : IObjectPrinterConfig
 	{
-	    ///<summary>
-	    /// The catch-all inspector to use if no inspector is found to inspect a given type.  
-	    /// "Default" as in the default in a switch statement.
-	    /// This will be appended to all configs.
-	    ///</summary>
-		public static ITypeInspector CatchAllTypeInspector = new InspectAllTypeInspector();
-
-	    ///<summary>The default tab character</summary>
-		public static string DefaultTab = "\t";
-
-	    ///<summary>The default newline character</summary>
-        public static string DefaultNewLine = Environment.NewLine;
-
-	    ///<summary>
-	    /// The default depth to recurse into the object graph.  Default is 10.
-	    /// This guards against self-referencing value types, like those found in Linq2Sql data definitions.
-	    ///</summary>
-        public static int DefaultMaxDepth = 10;
-
-	    ///<summary>
-	    /// The default setting for including ObjectPrinter logging in the output
-	    ///</summary>
-		public static bool DefaultIncludeLogging = false;
-
-        /// <summary>
-        /// The default setting for caching Exception output
-        /// </summary>
-        public static bool DefaultEnableExceptionCaching = false;
-
-        public static IEnumerable<ITypeInspector> DefaultTypeInspectors =
-            new TypeInspectorsRegistration().GetRegisteredInspectors();
-
-		/// <summary>
-		/// Delegate to return the inspectors to use and the order to use them in.
-		/// Change this at runtime to update the inspectors used and their order.
-		/// </summary>
-		public static Func<IEnumerable<ITypeInspector>> GetInspectors = () => DefaultTypeInspectors;
-
 	    private IEnumerable<ITypeInspector> _inspectors;
 
 	    ///<summary>
 	    /// The string to use as a tab.  
 	    /// Use html characters if outputting to html without the 'pre' element.
-	    /// If not specified, DefaultTab (\t) is used.
+        /// If not specified, Config.Printer.Tab (\t) is used.
 	    ///</summary>
         public string Tab { get; set; }
 
         ///<summary>
         /// The string to use as a newline.  
         /// Use html characters if outputting to html without the 'pre' element.
-        /// If not specified, DefaultNewLine (\n) is used.
+        /// If not specified, Config.Printer.NewLine (\n) is used.
         ///</summary>
 		public string NewLine { get; set; }
 
@@ -65,13 +27,13 @@ namespace ObjectPrinter
         /// The maximum depth of recursions into the object graph.
         /// This is useful for escaping an issue with value types 
         /// where we can't reliably determine same instance.
-        /// If not specified, DefaultMaxDepth (10) is used.
+        /// If not specified, Config.Printer.MaxDepth (10) is used.
         ///</summary>
         public int MaxDepth { get; set; }
 
         ///<summary>
         /// When true, the inspector used for an object is specified in the output.
-        /// If not specified, DefaultIncludeLogging (false) is used.
+        /// If not specified, Config.Printer.IncludeLogging (false) is used.
         ///</summary>
         public bool IncludeLogging { get; set; }
 
@@ -81,26 +43,27 @@ namespace ObjectPrinter
         /// For short lived exceptions with a lot of context, this can save considerable time.
         /// For long lived exceptions, it may be preferable to not take up the memory.
         /// For exceptions with little context, it may be cheap enough to dump again.
+        /// If not specified, Config.Printer.EnableExceptionCaching (false) is used.
         /// </summary>
         public bool EnableExceptionCaching { get; set; }
 
-		/// <summary>
-		/// The type inspectors to be used during the printing of an object.
+        /// <summary>
+        /// The type inspectors to be used during the printing of an object.
         /// If not specified, will use the GetInspectors static factory delegate.
-		/// </summary>
-		public IEnumerable<ITypeInspector> Inspectors
-		{
-		    get { return _inspectors ?? (_inspectors = GetInspectors()); }
-		    set { _inspectors = value; }
-		}
+        /// </summary>
+        public IEnumerable<ITypeInspector> Inspectors
+        {
+            get { return _inspectors ?? (_inspectors = Config.Inspectors.DefaultInspectors); }
+            set { _inspectors = value; }
+        }
 
-	    public ObjectPrinterConfig()
+        public ObjectPrinterConfig()
 		{
-			Tab = DefaultTab;
-			NewLine = DefaultNewLine;
-			MaxDepth = DefaultMaxDepth;
-			IncludeLogging = DefaultIncludeLogging;
-	        EnableExceptionCaching = DefaultEnableExceptionCaching;
+			Tab = Config.Printer.Tab;
+            NewLine = Config.Printer.NewLine;
+            MaxDepth = Config.Printer.MaxDepth;
+            IncludeLogging = Config.Printer.IncludeLogging;
+            EnableExceptionCaching = Config.Printer.EnableExceptionCaching;
 		}
 
 
@@ -112,7 +75,7 @@ namespace ObjectPrinter
 		{
 			return Inspectors
 			       	.FirstOrDefault(inspector => inspector.ShouldInspect(objectToInspect, typeOfObjectToInspect))
-			       ?? CatchAllTypeInspector;
+			       ?? Config.Inspectors.CatchAllTypeInspector;
 		}
 	}
 }

@@ -17,35 +17,14 @@ namespace ObjectPrinter.TypeInspectors
         /// <summary>If ShouldIncludeMember returns true (after member is evaluated), the member will be printed out. (EvaluateMember runs before IncludeMember)</summary>
 		public Func<object, ObjectInfo, bool> ShouldIncludeMember { get; set; }
 
-        public static bool DefaultEnableCaching = true;
-		public static BindingFlags DefaultMemberBindingFlags = BindingFlags.Instance
-		                                                         | BindingFlags.Public
-		                                                         | BindingFlags.GetProperty
-		                                                         | BindingFlags.GetField;
-
-		public static bool DefaultIncludeMethods = false;
-		public static bool DefaultIncludeToStringWhenOverridden = true;
-
-
 	    private IMemberCache _memberCache;
 	    private BindingFlags _memberBindingFlags;
 	    private bool _enableCaching;
 
-	    public bool EnableCaching
-	    {
-	        get { return _enableCaching; }
-	        set
-	        {
-	            _enableCaching = value;
-	            ResetCache();
-	        }
-	    }
-
-	    private void ResetCache()
-	    {
-	        _memberCache = MemberCacheFactory.Instance.Get(_enableCaching, _memberBindingFlags);
-	    }
-
+        /// <summary>
+        /// BindingFlags used to reflect members
+        /// If not specified, Config.InspectAllTypeInspector.MemberBindingFlags (false) is used.
+        /// </summary>
 	    public BindingFlags MemberBindingFlags
 	    {
 	        get { return _memberBindingFlags; }
@@ -56,17 +35,46 @@ namespace ObjectPrinter.TypeInspectors
 	        }
 	    }
 
-	    public bool IncludeMethods { get; set; }
+        /// <summary>
+        /// Enable caching of reflected values for each reflected type
+        /// If not specified, Config.InspectAllTypeInspector.EnableCaching (false) is used.
+        /// </summary>
+        public bool EnableCaching
+        {
+            get { return _enableCaching; }
+            set
+            {
+                _enableCaching = value;
+                ResetCache();
+            }
+        }
+
+        private void ResetCache()
+        {
+            _memberCache = MemberCacheFactory.Instance.Get(_enableCaching, _memberBindingFlags);
+        }
+
+        /// <summary>
+        /// Return methods in addition to properties and fields
+        /// If not specified, Config.InspectAllTypeInspector.IncludeMethods (false) is used.
+        /// </summary>
+        public bool IncludeMethods { get; set; }
+
+        /// <summary>
+        /// When ToString() is overridden, returns the value
+        /// If not specified, Config.InspectAllTypeInspector.IncludeToStringWhenOverridden (false) is used.
+        /// </summary>
 		public bool IncludeToStringWhenOverridden { get; set; }
 
 		public InspectAllTypeInspector()
 		{
-		    EnableCaching = DefaultEnableCaching;
-			MemberBindingFlags = DefaultMemberBindingFlags;
-			IncludeMethods = DefaultIncludeMethods;
-			IncludeToStringWhenOverridden = DefaultIncludeToStringWhenOverridden;
+		    EnableCaching = Config.InspectAllTypeInspector.Default.EnableCaching;
+			MemberBindingFlags = Config.InspectAllTypeInspector.Default.MemberBindingFlags;
+			IncludeMethods = Config.InspectAllTypeInspector.Default.IncludeMethods;
+			IncludeToStringWhenOverridden = Config.InspectAllTypeInspector.Default.IncludeToStringWhenOverridden;
 		}
 
+	    /// <summary>If ShouldInspect returns true, this type inspector will be used to inspect the type</summary>
 		public virtual bool ShouldInspect(object objectToInspect, Type typeOfObjectToInspect)
 		{
 			return ShouldInspectType == null || ShouldInspectType(objectToInspect, typeOfObjectToInspect);

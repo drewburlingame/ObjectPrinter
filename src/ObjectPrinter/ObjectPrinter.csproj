@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config.cs" />
     <Compile Include="IObjectPrinterConfig.cs" />
     <Compile Include="ExceptionExtensions.cs" />
     <Compile Include="TypeInspectorsRegistration.cs" />
