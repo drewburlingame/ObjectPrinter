@@ -71,6 +71,7 @@
     <Compile Include="IndentAwareTextWriterTests.cs" />
     <Compile Include="Log4NetObjectRendererTests.cs" />
     <Compile Include="ObjectPrinterSmokeTests.cs" />
+    <Compile Include="ObscuredTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

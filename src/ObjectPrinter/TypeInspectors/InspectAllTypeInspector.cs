@@ -66,12 +66,27 @@ namespace ObjectPrinter.TypeInspectors
         /// </summary>
 		public bool IncludeToStringWhenOverridden { get; set; }
 
+
+        /// <summary>
+        /// When true, the value of the ObjectInfo is replaced with ObscureValueText
+        /// If not specified, Config.InspectAllTypeInspector.ShouldObscureValue (null) is used.
+        /// </summary>
+        public Func<object, MemberInfo, ObjectInfo, bool> ShouldObscureValue { get; set; }
+
+        /// <summary>
+        /// The text to display when a value has been obscured.  
+        /// If not specified, Config.InspectAllTypeInspector.ObscureValueText ({obscured}) is used.
+        /// </summary>
+        public string ObscureValueText { get; set; }
+
 		public InspectAllTypeInspector()
 		{
 		    EnableCaching = Config.InspectAllTypeInspector.Default.EnableCaching;
 			MemberBindingFlags = Config.InspectAllTypeInspector.Default.MemberBindingFlags;
 			IncludeMethods = Config.InspectAllTypeInspector.Default.IncludeMethods;
 			IncludeToStringWhenOverridden = Config.InspectAllTypeInspector.Default.IncludeToStringWhenOverridden;
+		    ShouldObscureValue = Config.InspectAllTypeInspector.Default.ShouldObscureValue;
+		    ObscureValueText = Config.InspectAllTypeInspector.Default.ObscureValueText;
 		}
 
 	    /// <summary>If ShouldInspect returns true, this type inspector will be used to inspect the type</summary>
@@ -112,14 +127,14 @@ namespace ObjectPrinter.TypeInspectors
 		    members.AddRange(
 		        cache.GetProperties(type)
 		                    .Where(m => ShouldEvaluate(objectToInspect, m))
-		                    .Select(p => new ObjectInfo(p.Name, ParsePropertyInfo(objectToInspect, p)))
+		                    .Select(p => ToObjectInfo(objectToInspect, p, ParsePropertyInfo(objectToInspect, p)))
 		                    .Where(o => ShouldInclude(objectToInspect, o))
 		        );
 
 		    members.AddRange(
                 cache.GetFields(type)
 		                    .Where(m => ShouldEvaluate(objectToInspect, m))
-		                    .Select(f => new ObjectInfo(f.Name, ParseFieldInfo(objectToInspect, f)))
+                            .Select(f => ToObjectInfo(f.Name, f, ParseFieldInfo(objectToInspect, f)))
 		                    .Where(o => ShouldInclude(objectToInspect, o))
 		        );
 
@@ -128,7 +143,7 @@ namespace ObjectPrinter.TypeInspectors
 			    members.AddRange(
                     cache.GetMethods(type)
 			                    .Where(m => ShouldEvaluate(objectToInspect, m))
-			                    .Select(m => new ObjectInfo(m.Name, ParseMethodInfo(objectToInspect, m)))
+                                .Select(m => ToObjectInfo(m.Name, m, ParseMethodInfo(objectToInspect, m)))
 			                    .Where(o => ShouldInclude(objectToInspect, o))
 			        );
 			}
@@ -136,7 +151,17 @@ namespace ObjectPrinter.TypeInspectors
 			return members;
 		}
 
-		protected virtual object ParseMethodInfo(object objectToInspect, MethodInfo methodInfo)
+	    private ObjectInfo ToObjectInfo(object objectToInspect, MemberInfo memberInfo, object value)
+	    {
+	        var objectInfo = new ObjectInfo(memberInfo.Name, value);
+            if (ShouldObscureValue != null && ShouldObscureValue(objectToInspect, memberInfo, objectInfo))
+            {
+                objectInfo.Value = ObscureValueText;
+            }
+	        return objectInfo;
+	    }
+
+	    protected virtual object ParseMethodInfo(object objectToInspect, MethodInfo methodInfo)
 		{
 			return methodInfo.ToString();
 		}

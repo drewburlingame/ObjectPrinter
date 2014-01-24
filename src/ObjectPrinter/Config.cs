@@ -86,6 +86,11 @@ namespace ObjectPrinter
         {
             public static class Default
             {
+                static Default()
+                {
+                    ObscureValueText = "{obscured}";
+                }
+
                 /// <summary>BindingFlags used to reflect members</summary>
                 public static BindingFlags MemberBindingFlags = BindingFlags.Instance
                                                                 | BindingFlags.Public
@@ -100,6 +105,12 @@ namespace ObjectPrinter
 
                 /// <summary>When ToString() is overridden, returns the value</summary>
                 public static bool IncludeToStringWhenOverridden = true;
+
+                /// <summary>When true, the value of the ObjectInfo is replaced with ObscureValueText</summary>
+                public static Func<object, MemberInfo, ObjectInfo, bool> ShouldObscureValue { get; set; }
+
+                /// <summary>The text to display when a value has been obscured.  default: {obscured}</summary>
+                public static string ObscureValueText { get; set; }
             }
         }
     }
