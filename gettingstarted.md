@@ -10,7 +10,7 @@ Dump an object using log4net
 
 1. add to the first line of the log4net config section
 ```
-   <renderer renderingClass="ObjectPrinter.Log4Net.Log4NetObjectRenderer, ObjectPrinter" renderedClass="System.Object" />
+   <renderer renderingClass="ObjectPrinter.Log4Net.Log4NetObjectRenderer, ObjectPrinter.Log4Net.v1212" renderedClass="System.Object" />
 ```
 2. register Log4NetTypeInspector
 ```
