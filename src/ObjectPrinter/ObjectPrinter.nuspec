@@ -19,9 +19,13 @@ Use ObjectPrinter.Log4Net for a renderer to automatically dump all logged except
         </references>
         <tags>.net debug dump exception</tags>
         <releaseNotes>
+					v 1.2.5138.19225
+					- replace locks in MemberCache w/ ConcurrentDictionary.
+					  increase lookup speed, and decrease code complexity
+					
 					v 1.2.5137.27952
 					- added ShouldObscureValue and ObscureValueText: enables obscuring sensitive data.  
-					  Use Funcs.MemberContainsPassword to hide properties containing password, pwd, salt, connstring and connectionstring
+					  use Funcs.MemberContainsPassword to hide properties containing password, pwd, salt, connstring and connectionstring
 
 					v 1.2.0 ~ BREAKING CHANGES
 					- fixed centralized configs, moving all configs to Configs static class.
