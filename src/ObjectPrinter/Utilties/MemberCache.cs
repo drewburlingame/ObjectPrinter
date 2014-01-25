@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -8,13 +9,9 @@ namespace ObjectPrinter.Utilties
     {
         private readonly BindingFlags _bindingFlags;
 
-        private Dictionary<Type, IEnumerable<PropertyInfo>> _propertyCache = new Dictionary<Type, IEnumerable<PropertyInfo>>();
-        private Dictionary<Type, IEnumerable<FieldInfo>> _fieldCache = new Dictionary<Type, IEnumerable<FieldInfo>>();
-        private Dictionary<Type, IEnumerable<MethodInfo>> _methodCache = new Dictionary<Type, IEnumerable<MethodInfo>>();
-
-        private readonly object _propertyLockObj = new object();
-        private readonly object _fieldLockObj = new object();
-        private readonly object _methodLockObj = new object();
+        private readonly ConcurrentDictionary<Type, IEnumerable<PropertyInfo>> _propertyCache = new ConcurrentDictionary<Type, IEnumerable<PropertyInfo>>();
+        private readonly ConcurrentDictionary<Type, IEnumerable<FieldInfo>> _fieldCache = new ConcurrentDictionary<Type, IEnumerable<FieldInfo>>();
+        private readonly ConcurrentDictionary<Type, IEnumerable<MethodInfo>> _methodCache = new ConcurrentDictionary<Type, IEnumerable<MethodInfo>>();
 
         public MemberCache(BindingFlags bindingFlags)
         {
@@ -27,15 +24,7 @@ namespace ObjectPrinter.Utilties
 
             if (!_propertyCache.TryGetValue(type, out members))
             {
-                lock (_propertyLockObj)
-                {
-                    if (!_propertyCache.TryGetValue(type, out members))
-                    {
-                        var newCache = new Dictionary<Type, IEnumerable<PropertyInfo>>(_propertyCache);
-                        newCache[type] = members = type.GetProperties(_bindingFlags);
-                        _propertyCache = newCache;
-                    }
-                }
+                _propertyCache[type] = members = type.GetProperties(_bindingFlags);
             }
 
             return members;
@@ -46,15 +35,7 @@ namespace ObjectPrinter.Utilties
 
             if (!_fieldCache.TryGetValue(type, out members))
             {
-                lock (_fieldLockObj)
-                {
-                    if (!_fieldCache.TryGetValue(type, out members))
-                    {
-                        var newCache = new Dictionary<Type, IEnumerable<FieldInfo>>(_fieldCache);
-                        newCache[type] = members = type.GetFields(_bindingFlags);
-                        _fieldCache = newCache;
-                    }
-                }
+                _fieldCache[type] = members = type.GetFields(_bindingFlags);
             }
 
             return members;
@@ -65,15 +46,7 @@ namespace ObjectPrinter.Utilties
 
             if (!_methodCache.TryGetValue(type, out members))
             {
-                lock (_methodLockObj)
-                {
-                    if (!_methodCache.TryGetValue(type, out members))
-                    {
-                        var newCache = new Dictionary<Type, IEnumerable<MethodInfo>>(_methodCache);
-                        newCache[type] = members = type.GetMethods(_bindingFlags);
-                        _methodCache = newCache;
-                    }
-                }
+                _methodCache[type] = members = type.GetMethods(_bindingFlags);
             }
 
             return members;
@@ -81,18 +54,9 @@ namespace ObjectPrinter.Utilties
 
         public void Clear()
         {
-            lock (_propertyLockObj)
-            {
-                _propertyCache.Clear();
-            }
-            lock (_fieldLockObj)
-            {
-                _fieldCache.Clear();
-            }
-            lock (_methodLockObj)
-            {
-                _methodCache.Clear();
-            }
+            _propertyCache.Clear();
+            _fieldCache.Clear();
+            _methodCache.Clear();
         }
     }
 }
