@@ -1,7 +1,12 @@
 @ECHO OFF
 SETLOCAL
 
+ECHO starting with:
+dir nuget\. /B
+ECHO.
+
 del nuget\. /Q
+ECHO.
 
 SET NUGET=src\.nuget\nuget.exe
 SET OP=src\ObjectPrinter\ObjectPrinter.csproj
@@ -13,3 +18,7 @@ SET L4J12=src\ObjectPrinter.Log4Net.v1212\ObjectPrinter.Log4Net.v1212.csproj
 %NUGET% pack %L4J10% -OutputDirectory nuget -Prop Configuration=Release
 %NUGET% pack %L4J11% -OutputDirectory nuget -Prop Configuration=Release
 %NUGET% pack %L4J12% -OutputDirectory nuget -Prop Configuration=Release
+
+ECHO.
+ECHO ending with:
+dir nuget\. /B
