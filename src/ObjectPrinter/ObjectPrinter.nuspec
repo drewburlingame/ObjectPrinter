@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>ObjectPrinter</id>
+        <version>$version$</version>
+        <title>ObjectPrinter</title>
+        <authors>Drew Burlingame</authors>
+        <owners>Drew Burlingame</owners>
+        <projectUrl>https://github.com/drewburlingame/ObjectPrinter</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>
+Dumps an object to a string or a text writer. Great for debugging. Awesome for capturing context in production exception dumps. 
+
+Use ObjectPrinter.Log4Net for a renderer to automatically dump all logged exceptions using log4net.
+        </description>
+        <summary>Dump an object to string or textwriter.  Similar to print in php or python or console.log in nodejs.</summary>
+        <references>
+          <reference file="ObjectPrinter.dll" />
+        </references>
+        <tags>.net debug dump exception</tags>
+        <releaseNotes>
+v 1.2.0 ~ BREAKING CHANGES
+- fixed centralized configs, moving all configs to Configs static class.
+- fixed bug in Funcs.IncludtType, where condition needed to be reversed.
+- share reflection cache between inspectors for lifetime of appdomain
+- add LazyDump extension method, same as Dump, but less likely to conflict with Dump methods from other assemblies.
+
+v 1.1.1
+- fixed bug where cached version of exception could be included in the context if ex.DumpToString() 
+  was called and then later the exception was output not using that extension method.
+- exception caching is now disabled by default and can be enabled via the config. 
+  the cache will only be saved when dumping to string, but the cache will be reused when dumping to any source.
+
+v 1.1.0 ~ BREAKING CHANGES
+- adding TypeInspectorsRegistration to make it easy to add custom inspectors.
+- breaking changes
+  - renamed DefaultTypeInspector to CatchAllTypeInspector
+  - removed InspectorsWithAllTypesInspected and InspectorsWithMsTypesToStringed in favor of TypeInspectorsRegistration
+
+v 1.0.4
+- fixed bug where NonSerializableWrapper was being printed.  added smoke tests.
+- fixed bug where empty enumerable could print poorly and lose data.  added smoke tests.
+        </releaseNotes>
+    </metadata>
+</package>
