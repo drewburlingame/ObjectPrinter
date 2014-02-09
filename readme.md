@@ -54,7 +54,8 @@ Performance:
   Caching could hurt performance if a large number of types are cached.
   Determine what's best for your application.
 * If used on lazy-load objects, you could end up with a huge object 
-  graph, which is probably not what you want.
+  graph, which is probably not what you want.  Create a custom type
+  inspector for these classes to print the backing fields.
 * When logging to log4net, use the object renderer to prevent the 
   ObjectPrinter from being used until it needs to be.  
 * For logging frameworks that don't support custom renderers 
