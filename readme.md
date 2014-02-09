@@ -42,8 +42,19 @@ or
 
 It may not work if it's not the first line in the config.
 
-When using the log4net appender, you'll need to register Log4NetTypeInspector
+When using the log4net appender, you'll need to register Log4NetTypeInspector.
 
+When passing an object to print into one of the ....Format methods, the string formatter will be used on the object before it gets to the ObjectRenderer.  In these cases, call object.Dump().  This will pass a LazyString object which will activate the ObjectPrinter when .ToString() is called.  This allows deferring use of ObjectPrinter until we know the output will be used.
+
+``` c#
+Log.Info(someobject);                          //ObjectPrinter is used
+Log.InfoFormat("obj: {0}", someobject);        //ObjectPrinter is NOT used
+Log.InfoFormat("obj: {0}", someobject.Dump()); //ObjectPrinter is used
+
+//avoid this because DumpToString() invokes the ObjectPrinter immediately.
+//only do this if you are certain IsInfoEnabled==true
+Log.InfoFormat("obj: {0}", someobject.DumpToString());
+```
 #### Caveats
 
 Performance:
