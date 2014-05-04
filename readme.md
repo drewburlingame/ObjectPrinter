@@ -42,8 +42,19 @@ or
 
 It may not work if it's not the first line in the config.
 
-When using the log4net appender, you'll need to register Log4NetTypeInspector
+When using the log4net appender, you'll need to register Log4NetTypeInspector.
 
+When passing an object to print into one of the ....Format methods, the string formatter will be used on the object before it gets to the ObjectRenderer.  In these cases, call object.Dump().  This will pass a LazyString object which will activate the ObjectPrinter when .ToString() is called.  This allows deferring use of ObjectPrinter until we know the output will be used.
+
+``` c#
+Log.Info(someobject);                          //ObjectPrinter is used
+Log.InfoFormat("obj: {0}", someobject);        //ObjectPrinter is NOT used
+Log.InfoFormat("obj: {0}", someobject.Dump()); //ObjectPrinter is used
+
+//avoid this because DumpToString() invokes the ObjectPrinter immediately.
+//only do this if you are certain IsInfoEnabled==true
+Log.InfoFormat("obj: {0}", someobject.DumpToString());
+```
 #### Caveats
 
 Performance:
@@ -54,9 +65,17 @@ Performance:
   Caching could hurt performance if a large number of types are cached.
   Determine what's best for your application.
 * If used on lazy-load objects, you could end up with a huge object 
-  graph, which is probably not what you want.
+  graph, which is probably not what you want.  Create a custom type
+  inspector for these classes to print the backing fields.
 * When logging to log4net, use the object renderer to prevent the 
   ObjectPrinter from being used until it needs to be.  
 * For logging frameworks that don't support custom renderers 
   (including Common.Logging), ensure the logging level is enabled 
   before calling Dump()
+  
+
+#### About this project  
+* maintained by Drew Burlingame
+* open to pull requests, including documentation
+* please create issues for any bugs found.  i depend on this in high volume production sites, so i'm invested in keeping quality high.
+
