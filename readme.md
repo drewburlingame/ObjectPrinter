@@ -72,3 +72,10 @@ Performance:
 * For logging frameworks that don't support custom renderers 
   (including Common.Logging), ensure the logging level is enabled 
   before calling Dump()
+  
+
+#### About this project  
+* maintained by Drew Burlingame
+* open to pull requests, including documentation
+* please create issues for any bugs found.  i depend on this in high volume production sites, so i'm invested in keeping quality high.
+
