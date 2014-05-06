@@ -64,6 +64,14 @@ namespace ObjectPrinter
         }
 
         /// <summary>Inspectors to be used run before the CatchAll inspector</summary>
+        public TypeInspectorsRegistration RegisterInspectors(params ITypeInspector[] inspectors)
+        {
+            if (inspectors == null) throw new ArgumentNullException("inspectors");
+            _inspectors.AddRange(inspectors);
+            return this;
+        }
+
+        /// <summary>Inspectors to be used run before the CatchAll inspector</summary>
         public TypeInspectorsRegistration RegisterInspector(ITypeInspector inspector)
         {
             if (inspector == null) throw new ArgumentNullException("inspector");
