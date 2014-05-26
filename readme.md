@@ -1,11 +1,11 @@
 ObjectPrinter dumps the object graph for a given object, 
 similar to print in php & python or console.log in nodejs.
 
-#### Why ObjectPrinter vs. json
+#### Why ObjectPrinter instead of json?
 
-1. system types can be output using ToString()
-2. use custom type inspectors to prevent inspection of lazy load properties
-3. view hashcodes to identify sameness
+1. System types can be output using ToString()
+2. Use custom type inspectors to prevent traversing lazy load properties.  Can prevent loading entire object graph from database.
+3. View hashcodes to identify sameness
 
 #### Configuration
 All configuration is handled via the static Config class.  Nested sub classes are used to categorize the different configs.
