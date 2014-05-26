@@ -1,6 +1,6 @@
 Dump an object in tests and sandbox apps
 
-1. use nuget to add ObjectPrinter to your project(s)
+1. reference the [nuget ObjectPrinter package](http://www.nuget.org/packages/ObjectPrinter/)
 2. use the static class ObjectPrinter.Config to set default behavior for your application
 3. print to console: Console.Out.WriteLine(someObj.Dump())
 4. print to output stream: someObj.DumpTo(Console.Out)
