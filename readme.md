@@ -11,7 +11,7 @@ similar to print in php & python or console.log in nodejs.
 All configuration is handled via the static Config class.  Nested sub classes are used to categorize the different configs.
 
 #### Inspecting objects from 3rd party libraries.  
-When documentation of a 3rd party library may be found wanting. Dumping an object with data can bring clarity to the implementation.
+When documentation of a 3rd party library may be found wanting, dumping objects with data augments code investigation.
 
 #### Capturing context for an exception.  
 In a typical logging scenario, when capturing context of an exception, you catch the exception, log data and then throw the exception again.  
