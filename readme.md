@@ -3,7 +3,7 @@ similar to print in php & python or console.log in nodejs.
 
 #### Why ObjectPrinter instead of json?
 
-1. System types can be output using ToString()
+1. System types can be output using ToString().  How often do we really need all the different properties for Uri?
 2. Use custom type inspectors to prevent traversing lazy load properties.  Can prevent loading entire object graph from database.
 3. View hashcodes to identify sameness
 
