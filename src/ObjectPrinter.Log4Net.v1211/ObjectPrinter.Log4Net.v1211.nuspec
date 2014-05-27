@@ -19,4 +19,8 @@ Also provides a log4net type inspector to prevent prevent dumping log4net object
             <dependency id="ObjectPrinter" version="1.1.1" />
         </dependencies>
     </metadata>
+  <files>
+    <file src="bin\Release\ObjectPrinter.Log4Net.v1211.dll" target="lib\Net40" />
+    <file src="bin\Release\ObjectPrinter.Log4Net.v1211.xml" target="lib\Net40" />
+  </files>
 </package>
