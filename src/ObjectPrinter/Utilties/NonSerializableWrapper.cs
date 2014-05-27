@@ -3,15 +3,27 @@ using System.Runtime.Serialization;
 
 namespace ObjectPrinter.Utilties
 {
+	/// <summary>
+    /// A NonSerializableWrapper is a wrapper to contain non-serializable objects within Exception.Data
+    /// which requires all items to be serializable.  
+    /// If the item is serialized and PrintOnSerialize is true, the object is converted
+    /// to a string using the ObjectPrinter otherwise the item is lost
+	/// </summary>
 	[Serializable]
 	public class NonSerializableWrapper : ISerializable
 	{
+		/// <summary>
+		/// The wrapped item
+		/// </summary>
 		public object Context;
 
+		/// <summary>
+		/// determines whether Context is dumped or dropped
+		/// </summary>
 		[NonSerialized] 
 		public bool PrintOnSerialize;
 
-		public void GetObjectData(SerializationInfo info, StreamingContext context)
+	    void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			if (info == null)
 			{

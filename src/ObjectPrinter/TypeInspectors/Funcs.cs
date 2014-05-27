@@ -5,6 +5,10 @@ using ObjectPrinter.Utilties;
 
 namespace ObjectPrinter.TypeInspectors
 {
+
+	/// <summary>
+	/// Boiler plate functions that can be used to customize TypeInspectors
+	/// </summary>
 	public static class Funcs
 	{
         /// <summary>typeof (Exception).IsAssignableFrom(type)</summary>
@@ -64,6 +68,11 @@ namespace ObjectPrinter.TypeInspectors
 			return string.IsNullOrEmpty(type.Namespace) ? ns == string.Empty : type.Namespace.StartsWith(ns);
 		}
 
+		/// <summary>
+		/// Check if the provided object is an instance of any of the provided types
+		/// </summary>
+		/// <param name="inherit">when true, returns true if the given object inherits from any of the provided types</param>
+		/// <param name="types">the types to check against</param>
 		public static Func<object, Type, bool> IncludeTypes(bool inherit, params Type[] types)
 		{
 			if (types.IsNullOrEmpty())
@@ -79,6 +88,11 @@ namespace ObjectPrinter.TypeInspectors
 			return (o, type) => types.Any(t => IsTheTypeYoureLookingFor(t, type, inherit));
 		}
 
+        /// <summary>
+        /// Check if the provided object is not an instance of any of the provided types
+        /// </summary>
+        /// <param name="inherit">when true, returns false if the given object inherits from any of the provided types</param>
+        /// <param name="types">the types to check against</param>
 		public static Func<object, Type, bool> ExcludeTypes(bool inherit, params Type[] types)
 		{
 			if (types.IsNullOrEmpty())
@@ -99,6 +113,9 @@ namespace ObjectPrinter.TypeInspectors
             return inherit ? typeToFind.IsAssignableFrom(type) : typeToFind == type;
 		}
 
+		/// <summary>
+		/// Returns false when the ObjectInfo.Value is null
+		/// </summary>
 		public static Func<object, ObjectInfo, bool> ExcludeNullMembers
 		{
 			get { return (o, info) => info.Value != null; }
@@ -112,7 +129,7 @@ namespace ObjectPrinter.TypeInspectors
         {
             get
             {
-                return (memberInfo) =>
+                return memberInfo =>
                        memberInfo.Name.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0
                        || memberInfo.Name.IndexOf("pwd", StringComparison.OrdinalIgnoreCase) >= 0
                        || memberInfo.Name.IndexOf("salt", StringComparison.OrdinalIgnoreCase) >= 0

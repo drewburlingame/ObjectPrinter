@@ -5,6 +5,9 @@ using System.Reflection;
 
 namespace ObjectPrinter.Utilties
 {
+    /// <summary>
+    /// Caches the member information used to inspect a type.
+    /// </summary>
     public class MemberCache : IMemberCache
     {
         private readonly BindingFlags _bindingFlags;
@@ -13,11 +16,18 @@ namespace ObjectPrinter.Utilties
         private readonly ConcurrentDictionary<Type, IEnumerable<FieldInfo>> _fieldCache = new ConcurrentDictionary<Type, IEnumerable<FieldInfo>>();
         private readonly ConcurrentDictionary<Type, IEnumerable<MethodInfo>> _methodCache = new ConcurrentDictionary<Type, IEnumerable<MethodInfo>>();
 
+        /// <summary>
+        /// Creates a new instance of MemberCache
+        /// </summary>
+        /// <param name="bindingFlags"></param>
         public MemberCache(BindingFlags bindingFlags)
         {
             _bindingFlags = bindingFlags;
         }
 
+        /// <summary>
+        /// Returns the properties to inspect
+        /// </summary>
         public IEnumerable<PropertyInfo> GetProperties(Type type)
         {
             IEnumerable<PropertyInfo> members;
@@ -29,6 +39,10 @@ namespace ObjectPrinter.Utilties
 
             return members;
         }
+
+        /// <summary>
+        /// Returns the fields to inspect
+        /// </summary>
         public IEnumerable<FieldInfo> GetFields(Type type)
         {
             IEnumerable<FieldInfo> members;
@@ -40,6 +54,10 @@ namespace ObjectPrinter.Utilties
 
             return members;
         }
+
+        /// <summary>
+        /// Returns the methods to inspect
+        /// </summary>
         public IEnumerable<MethodInfo> GetMethods(Type type)
         {
             IEnumerable<MethodInfo> members;
@@ -50,13 +68,6 @@ namespace ObjectPrinter.Utilties
             }
 
             return members;
-        }
-
-        public void Clear()
-        {
-            _propertyCache.Clear();
-            _fieldCache.Clear();
-            _methodCache.Clear();
         }
     }
 }

@@ -3,6 +3,9 @@ using ObjectPrinter.Utilties;
 
 namespace ObjectPrinter
 {
+	/// <summary>
+	/// Extensions for dumping an Object to a TextWriter or String
+	/// </summary>
 	public static class ObjectExtensions
     {
         ///<summary>Uses the ObjectPrinter to loop through the properties of the object, dumping them to the provided TextWriter.</summary>

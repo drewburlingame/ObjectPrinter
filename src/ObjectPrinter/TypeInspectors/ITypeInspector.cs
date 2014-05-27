@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace ObjectPrinter.TypeInspectors
 {
+	/// <summary>
+	/// Type inspectors determine how a type should be inspected.
+	/// </summary>
 	public interface ITypeInspector
     {
         /// <summary>If ShouldInspect returns true, this type inspector will be used to inspect the type</summary>

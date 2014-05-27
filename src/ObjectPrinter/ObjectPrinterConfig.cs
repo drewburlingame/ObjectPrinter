@@ -5,6 +5,9 @@ using ObjectPrinter.TypeInspectors;
 
 namespace ObjectPrinter
 {
+    /// <summary>
+    /// Configs that can be overridden for a specific Dump by the ObjectPrinter
+    /// </summary>
     public class ObjectPrinterConfig : IObjectPrinterConfig
 	{
 	    private IEnumerable<ITypeInspector> _inspectors;
@@ -57,6 +60,9 @@ namespace ObjectPrinter
             set { _inspectors = value; }
         }
 
+        /// <summary>
+        /// instatiates new instace of ObjectPrinterConfig using defaults from Config.Printer
+        /// </summary>
         public ObjectPrinterConfig()
 		{
 			Tab = Config.Printer.Tab;

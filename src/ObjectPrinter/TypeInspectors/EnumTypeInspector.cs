@@ -7,12 +7,14 @@ namespace ObjectPrinter.TypeInspectors
 {
     /// <summary>Returns the full name of an enum</summary>
 	public class EnumTypeInspector : ITypeInspector
-	{
+    {
+        ///<summary></summary>
 		public bool ShouldInspect(object objectToInspect, Type typeOfObjectToInspect)
 		{
 			return typeof(Enum).IsAssignableFrom(typeOfObjectToInspect);
 		}
 
+        ///<summary></summary>
 		public IEnumerable<ObjectInfo> GetMemberList(object objectToInspect, Type typeOfObjectToInspect)
 		{
 			var objAsEnum = (Enum)objectToInspect;

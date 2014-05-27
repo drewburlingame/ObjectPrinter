@@ -3,6 +3,9 @@ using ObjectPrinter.TypeInspectors;
 
 namespace ObjectPrinter
 {
+	/// <summary>
+	/// Defines the config used during an ObjectPrinter.Dump
+	/// </summary>
 	public interface IObjectPrinterConfig
     {
         ///<summary>
@@ -41,6 +44,9 @@ namespace ObjectPrinter
 	    /// </summary>
 	    bool EnableExceptionCaching { get; set; }
 
+        /// <summary>
+        /// Returns an ITypeInspector for the given object
+        /// </summary>
 	    ITypeInspector GetInspector(object objectToInspect, Type typeOfObjectToInspect);
 	}
 }

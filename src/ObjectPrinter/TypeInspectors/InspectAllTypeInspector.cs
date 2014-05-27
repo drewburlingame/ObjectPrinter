@@ -6,6 +6,9 @@ using ObjectPrinter.Utilties;
 
 namespace ObjectPrinter.TypeInspectors
 {
+	/// <summary>
+    /// Inspects all Fields and Properties, and any method definitions when IncludeMethods is true.
+	/// </summary>
 	public class InspectAllTypeInspector : ITypeInspector
 	{
 		/// <summary>If ShouldInspectType returns true, this inspector will handle the type.</summary>
@@ -51,7 +54,7 @@ namespace ObjectPrinter.TypeInspectors
 
         private void ResetCache()
         {
-            _memberCache = MemberCacheFactory.Instance.Get(_enableCaching, _memberBindingFlags);
+            _memberCache = MemberCacheFactory.Get(_enableCaching, _memberBindingFlags);
         }
 
         /// <summary>
@@ -79,6 +82,7 @@ namespace ObjectPrinter.TypeInspectors
         /// </summary>
         public string ObscureValueText { get; set; }
 
+        ///<summary></summary>
 		public InspectAllTypeInspector()
 		{
 		    EnableCaching = Config.InspectAllTypeInspector.Default.EnableCaching;
@@ -107,6 +111,7 @@ namespace ObjectPrinter.TypeInspectors
 			return ShouldIncludeMember == null || ShouldIncludeMember(instance, info);
 		}
 
+        ///<summary></summary>
 		public virtual IEnumerable<ObjectInfo> GetMemberList(object objectToInspect, Type typeOfObjectToInspect)
 		{
 			var type = objectToInspect.GetType();
@@ -161,16 +166,19 @@ namespace ObjectPrinter.TypeInspectors
 	        return objectInfo;
 	    }
 
+        ///<summary>returns methodInfo.ToString()</summary>
 	    protected virtual object ParseMethodInfo(object objectToInspect, MethodInfo methodInfo)
 		{
 			return methodInfo.ToString();
 		}
 
+        ///<summary>returns fieldInfo.GetValue(objectToInspect)</summary>
 		protected virtual object ParseFieldInfo(object objectToInspect, FieldInfo fieldInfo)
 		{
 			return ParseObjectValue(() => fieldInfo.GetValue(objectToInspect));
 		}
 
+        ///<summary>returns property.GetValue(instance, null)</summary>
 		protected virtual object ParsePropertyInfo(object instance, PropertyInfo property)
 		{
 			return ParseObjectValue(() => property.GetValue(instance, null));

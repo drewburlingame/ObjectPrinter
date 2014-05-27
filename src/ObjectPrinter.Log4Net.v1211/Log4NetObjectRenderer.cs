@@ -4,6 +4,9 @@ using log4net.ObjectRenderer;
 
 namespace ObjectPrinter.Log4Net
 {
+	/// <summary>
+	/// class used by log4net to render objects
+	/// </summary>
 	public class Log4NetObjectRenderer : IObjectRenderer
 	{
 		/// <summary></summary>
@@ -35,7 +38,7 @@ namespace ObjectPrinter.Log4Net
 				return;
 			}
 
-			new Printers.ObjectPrinter(obj).PrintTo(writer);
+            obj.DumpTo(writer);
 		}
 	}
 }

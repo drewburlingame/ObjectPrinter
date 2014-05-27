@@ -1,37 +1,22 @@
-using System.Collections.Generic;
+using System;
+using System.Collections.Concurrent;
 using System.Reflection;
 
 namespace ObjectPrinter.Utilties
 {
-    public class MemberCacheFactory
+    internal class MemberCacheFactory
     {
-        public static MemberCacheFactory Instance = new MemberCacheFactory();
-        private readonly IDictionary<BindingFlags, MemberCache> _cache = new Dictionary<BindingFlags, MemberCache>();
+        private static readonly ConcurrentDictionary<BindingFlags, IMemberCache> CacheByBindingFlags = new ConcurrentDictionary<BindingFlags, IMemberCache>();
+
+        internal static Func<BindingFlags, IMemberCache> DefaultGetCacheDelegate = flags => new MemberCache(flags);
         
-        public IMemberCache Get(bool enableCaching, BindingFlags bindingFlags)
+        internal static IMemberCache Get(bool enableCaching, BindingFlags bindingFlags)
         {
-            if (!enableCaching)
-            {
-                return new BigAlMemberCache(bindingFlags);
-            }
-
-            MemberCache cache;
-            lock (_cache)
-            {
-                if (!_cache.TryGetValue(bindingFlags, out cache))
-                {
-                    _cache[bindingFlags] = cache = new MemberCache(bindingFlags);
-                }
-            }
-            return cache;
-        }
-
-        public void Clear()
-        {
-            lock (_cache)
-            {
-                _cache.Clear();
-            }
+            return !enableCaching
+                       ? new BigAlMemberCache(bindingFlags)
+                       : CacheByBindingFlags.GetOrAdd(
+                           bindingFlags,
+                           bf => (Config.InspectAllTypeInspector.GetMemberCacheDelegate ?? DefaultGetCacheDelegate)(bf));
         }
     }
 }

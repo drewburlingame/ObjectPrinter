@@ -313,7 +313,15 @@ namespace ObjectPrinter.Specs
         private static void shouldBeSame(string expected, object objectToPrint)
         {
             var sb = new StringBuilder();
-            objectToPrint.DumpTo(new StringWriter(sb));
+            try
+            {
+                objectToPrint.DumpTo(new StringWriter(sb));
+            }
+            catch (Exception)
+            {
+                Console.Out.WriteLine(sb.ToString());
+                throw;
+            }
             var actual = sb.ToString();
 
             var hashcodesRegex = new Regex("hashcode { [0-9]* }");

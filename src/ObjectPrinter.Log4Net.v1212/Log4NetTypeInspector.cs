@@ -8,7 +8,8 @@ namespace ObjectPrinter.Log4Net
 	/// as log4net intended.  all bow to log4net.
 	/// </summary>
 	public class Log4NetTypeInspector : ToStringTypeInspector
-	{
+    {
+        ///<summary></summary>
 		public Log4NetTypeInspector()
 		{
 			ShouldInspectType = NamespaceIsLog4Net;

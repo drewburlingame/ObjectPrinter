@@ -33,12 +33,20 @@ namespace ObjectPrinter
 
         private bool _inspectAllMsTypes;
 
+        /// <summary>
+        /// Overrides the default EnumTypeInspector.
+        /// </summary>
+        /// <returns>this</returns>
         public TypeInspectorsRegistration OverrideEnumInspector(ITypeInspector enumTypeInspector)
         {
             _enumTypeInspector = enumTypeInspector;
             return this;
         }
 
+        /// <summary>
+        /// Overrides the default ExceptionTypeInspector.
+        /// </summary>
+        /// <returns>this</returns>
         public TypeInspectorsRegistration OverrideExceptionInspector(ITypeInspector exceptionTypeInspector)
         {
             _exceptionTypeInspector = exceptionTypeInspector;
@@ -79,7 +87,7 @@ namespace ObjectPrinter
             return this;
         }
 
-        public IEnumerable<ITypeInspector> GetRegisteredInspectors()
+        internal IEnumerable<ITypeInspector> GetRegisteredInspectors()
         {
             yield return _enumTypeInspector ?? DefaultEnumTypeInspector;
             yield return _exceptionTypeInspector ?? DefaultExceptionTypeInspector;

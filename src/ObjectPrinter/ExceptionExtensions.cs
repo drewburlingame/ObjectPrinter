@@ -3,6 +3,9 @@ using ObjectPrinter.Utilties;
 
 namespace ObjectPrinter
 {
+	/// <summary>
+	/// Extensions for exceptions
+	/// </summary>
 	public static class ExceptionExtensions
 	{
         /// <summary>

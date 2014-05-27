@@ -8,7 +8,7 @@ using ObjectPrinter.Utilties;
 
 namespace ObjectPrinter.Printers
 {
-	public class ObjectPrinter
+	internal class ObjectPrinter
     {
         public const string CacheKey = "ObjectPrinterDumpToStringCache";
 		private const string NullValue = "{NULL}";
@@ -191,7 +191,7 @@ namespace ObjectPrinter.Printers
 				return true;
 			}
 
-			members = objectInfo.Inspector.GetMemberList(objectInfo).Where(info => info.Name != CacheKey).ToList();
+		    members = objectInfo.Inspector.GetMemberList(objectInfo).ToList().Where(info => info.Name != CacheKey).ToList();
 			if (members.Count == 1 && (members[0].Value == null || members[0].Value is string))
 			{
 				singleValue = members[0].Value;

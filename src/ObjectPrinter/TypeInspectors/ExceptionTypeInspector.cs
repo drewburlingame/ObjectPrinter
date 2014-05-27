@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ObjectPrinter.Utilties;
 
 namespace ObjectPrinter.TypeInspectors
 {
@@ -9,13 +8,15 @@ namespace ObjectPrinter.TypeInspectors
 	/// Returns properties in a well known order to make it easier to scan the data
 	/// </summary>
 	public class ExceptionTypeInspector : InspectAllTypeInspector
-	{
+    {
+        ///<summary></summary>
 		public override bool ShouldInspect(object objectToInspect, Type typeOfObjectToInspect)
 		{
 			return base.ShouldInspect(objectToInspect, typeOfObjectToInspect)
 			       && Funcs.IsException(objectToInspect, typeOfObjectToInspect);
 		}
 
+        ///<summary></summary>
 		public override IEnumerable<ObjectInfo> GetMemberList(object objectToInspect, Type typeOfObjectToInspect)
 		{
 			return base.GetMemberList(objectToInspect, typeOfObjectToInspect)

@@ -2,28 +2,33 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using ObjectPrinter.TypeInspectors;
+using ObjectPrinter.Utilties;
 
 namespace ObjectPrinter
 {
+    /// <summary>
+    /// The entry point for ObjectPrinter configuration
+    /// </summary>
     public static class Config
     {
+        /// <summary>
+        /// Configs defining inspectors
+        /// </summary>
         public static class Inspectors
         {
             private static ITypeInspector _catchAllTypeInspector = new TypeInspectors.InspectAllTypeInspector();
-            private static TypeInspectorsRegistration _defaultRegistration;
+            private static readonly TypeInspectorsRegistration DefaultRegistration;
             private static TypeInspectorsRegistration _userProvidedRegistration;
             internal static IEnumerable<ITypeInspector> DefaultInspectors;
 
             static Inspectors()
             {
-                _defaultRegistration = new TypeInspectorsRegistration();
+                DefaultRegistration = new TypeInspectorsRegistration();
                 ReloadInspectors();
             }
 
             ///<summary>
-            /// The catch-all inspector to use if no inspector is found to inspect a given type.  
-            /// "Default" as in the default in a switch statement.
-            /// This will be appended to all configs.
+            /// The catch-all inspector to use if no inspector is found to inspect a given type.
             ///</summary>
             public static ITypeInspector CatchAllTypeInspector
             {
@@ -32,7 +37,6 @@ namespace ObjectPrinter
                 {
                     if (value == null) throw new ArgumentNullException("value");
                     _catchAllTypeInspector = value;
-                    _defaultRegistration = new TypeInspectorsRegistration();
                     ReloadInspectors();
                 }
             }
@@ -42,7 +46,7 @@ namespace ObjectPrinter
             /// </summary>
             public static TypeInspectorsRegistration Registration
             {
-                get { return _userProvidedRegistration ?? _defaultRegistration; }
+                get { return _userProvidedRegistration ?? DefaultRegistration; }
                 set
                 {
                     if (value == null) throw new ArgumentNullException("value");
@@ -57,6 +61,9 @@ namespace ObjectPrinter
             }
         }
 
+        /// <summary>
+        /// Defaults for ObjectPrinterConfig
+        /// </summary>
         public static class Printer
         {
             ///<summary>The default tab character</summary>
@@ -82,8 +89,20 @@ namespace ObjectPrinter
             public static bool EnableExceptionCaching = false;
         }
 
+        /// <summary>
+        /// Configs for the InspectAllTypeInspector, the default CatchAllTypeInspector 
+        /// </summary>
         public static class InspectAllTypeInspector
         {
+            /// <summary>
+            /// Used to override default caching mechanism when InspectAllTypeInspector.Default.EnableCaching is true.
+            /// Any instance created will be reused per BindingFlags for the life of the AppDomain
+            /// </summary>
+            public static Func<BindingFlags, IMemberCache> GetMemberCacheDelegate = MemberCacheFactory.DefaultGetCacheDelegate;
+
+            /// <summary>
+            /// Defaults
+            /// </summary>
             public static class Default
             {
                 static Default()
