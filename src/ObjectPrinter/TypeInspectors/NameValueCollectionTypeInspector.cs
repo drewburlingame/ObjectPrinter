@@ -4,13 +4,19 @@ using System.Collections.Specialized;
 
 namespace ObjectPrinter.TypeInspectors
 {
-    public class NameValueCollectionTypeInspector : BaseTypedInspector<NameValueCollection>
+    public class NameValueCollectionTypeInspector : ITypeInspector
     {
-        protected override IEnumerable<ObjectInfo> OnGetMemberList(NameValueCollection objectToInspect, Type typeOfObjectToInspect)
+        public bool ShouldInspect(object objectToInspect, Type typeOfObjectToInspect)
         {
-            for (int i = 0; i < objectToInspect.Count; i++)
+            return typeof(NameValueCollection).IsAssignableFrom(typeOfObjectToInspect);
+        }
+
+        public IEnumerable<ObjectInfo> GetMemberList(object objectToInspect, Type typeOfObjectToInspect)
+        {
+            var nvc = (NameValueCollection) objectToInspect;
+            for (int i = 0; i < nvc.Count; i++)
             {
-                yield return new ObjectInfo(objectToInspect.Keys[i], objectToInspect[i]);
+                yield return new ObjectInfo(nvc.Keys[i], nvc[i]);
             }
         }
     }

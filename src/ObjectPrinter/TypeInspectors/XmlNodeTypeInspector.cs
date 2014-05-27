@@ -4,11 +4,16 @@ using System.Xml;
 
 namespace ObjectPrinter.TypeInspectors
 {
-    public class XmlNodeTypeInspector : BaseTypedInspector<XmlNode>
+    public class XmlNodeTypeInspector : ITypeInspector
     {
-        protected override IEnumerable<ObjectInfo> OnGetMemberList(XmlNode objectToInspect, Type typeOfObjectToInspect)
+        public bool ShouldInspect(object objectToInspect, Type typeOfObjectToInspect)
         {
-            yield return new ObjectInfo(objectToInspect.InnerXml);
+            return typeof(XmlNode).IsAssignableFrom(typeOfObjectToInspect);
+        }
+
+        public IEnumerable<ObjectInfo> GetMemberList(object objectToInspect, Type typeOfObjectToInspect)
+        {
+            yield return new ObjectInfo(((XmlNode)objectToInspect).InnerXml);
         }
     }
 }

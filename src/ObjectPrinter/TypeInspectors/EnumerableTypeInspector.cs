@@ -5,12 +5,17 @@ using System.Linq;
 
 namespace ObjectPrinter.TypeInspectors
 {
-    public class EnumerableTypeInspector : BaseTypedInspector<IEnumerable>
+    public class EnumerableTypeInspector : ITypeInspector
     {
-        protected override IEnumerable<ObjectInfo> OnGetMemberList(IEnumerable objectToInspect, Type typeOfObjectToInspect)
+        public bool ShouldInspect(object objectToInspect, Type typeOfObjectToInspect)
         {
-            return from Object obj in objectToInspect
-                   select new ObjectInfo(obj);
+            return typeof(IEnumerable).IsAssignableFrom(typeOfObjectToInspect);
+        }
+
+        public IEnumerable<ObjectInfo> GetMemberList(object objectToInspect, Type typeOfObjectToInspect)
+        {
+            return from Object obj in (IEnumerable)objectToInspect
+                   select new ObjectInfo(obj.RemoveNonSerializableWrapper());
         }
     }
 }

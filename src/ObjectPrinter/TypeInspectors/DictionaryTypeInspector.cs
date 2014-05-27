@@ -5,14 +5,17 @@ using System.Linq;
 
 namespace ObjectPrinter.TypeInspectors
 {
-    public class DictionaryTypeInspector : BaseTypedInspector<IDictionary>
+    public class DictionaryTypeInspector : ITypeInspector
     {
-        protected override IEnumerable<ObjectInfo> OnGetMemberList(IDictionary objectToInspect, Type typeOfObjectToInspect)
+        public bool ShouldInspect(object objectToInspect, Type typeOfObjectToInspect)
         {
-            foreach (DictionaryEntry entry in objectToInspect)
-            {
-                yield return new ObjectInfo(entry.Key.ToString(), entry.Value);
-            }
+            return typeof(IDictionary).IsAssignableFrom(typeOfObjectToInspect);
+        }
+
+        public IEnumerable<ObjectInfo> GetMemberList(object objectToInspect, Type typeOfObjectToInspect)
+        {
+            return from DictionaryEntry entry in (IDictionary)objectToInspect
+                   select new ObjectInfo(entry.Key.ToString(), entry.Value.RemoveNonSerializableWrapper());
         }
     }
 }

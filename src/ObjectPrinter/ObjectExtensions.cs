@@ -33,5 +33,16 @@ namespace ObjectPrinter
         {
             return new LazyString(() => new Printers.ObjectPrinter(obj, config ?? Printers.ObjectPrinter.GetDefaultContext()).PrintToString());
         }
+
+        internal static object RemoveNonSerializableWrapper(this object objectInfo)
+        {
+            var wrapper = objectInfo as NonSerializableWrapper;
+            if (wrapper == null)
+            {
+                return objectInfo;
+            }
+
+            return wrapper.Context;
+        }
 	}
 }
