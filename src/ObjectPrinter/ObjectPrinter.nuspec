@@ -14,10 +14,6 @@ Dumps an object to a string or a text writer. Great for debugging. Awesome for c
 Use ObjectPrinter.Log4Net for a renderer to automatically dump all logged exceptions using log4net.
         </description>
         <summary>Dump an object to string or textwriter.  Similar to print in php or python or console.log in nodejs.</summary>
-        <references>
-          <reference file="ObjectPrinter.dll" />
-          <reference file="ObjectPrinter.xml" />
-        </references>
         <tags>.net debug dump exception</tags>
         <releaseNotes>
 					v 1.2.5138.19225
@@ -50,4 +46,8 @@ Use ObjectPrinter.Log4Net for a renderer to automatically dump all logged except
 					- fixed bug where empty enumerable could print poorly and lose data.  added smoke tests.
 				</releaseNotes>
     </metadata>
+    <files>
+      <file src="bin\Release\ObjectPrinter.dll" target="lib\Net40" />
+      <file src="bin\Release\ObjectPrinter.xml" target="lib\Net40" />
+    </files>
 </package>
