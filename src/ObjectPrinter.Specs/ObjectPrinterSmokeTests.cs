@@ -83,12 +83,14 @@ namespace ObjectPrinter.Specs
 		Dictionary : {NULL}
 		Hashtable : {NULL}
 		NVC : {NULL}
+		SomeEnumMember : SomeEnum.Enum22
 	}
 	Parent : {NULL}
 	Array : [ObjectPrintable[]]: hashcode { $ignore$ }{}
 	Dictionary : [Dictionary`2]: hashcode { $ignore$ }{}
 	Hashtable : [Hashtable]: hashcode { $ignore$ }{}
 	NVC : [NameValueCollection]: hashcode { $ignore$ }{}
+	SomeEnumMember : SomeEnum.Enum22
 }";
 
             shouldBeSame(expected, parent);
@@ -155,6 +157,7 @@ namespace ObjectPrinter.Specs
 		Dictionary : {NULL}
 		Hashtable : {NULL}
 		NVC : {NULL}
+		SomeEnumMember : SomeEnum.Enum22
 	}
 	Parent : {NULL}
 	Array : [ObjectPrintable[]]: hashcode { $ignore$ }
@@ -170,6 +173,7 @@ namespace ObjectPrinter.Specs
 			Dictionary : {NULL}
 			Hashtable : {NULL}
 			NVC : {NULL}
+			SomeEnumMember : SomeEnum.Enum22
 		}
 		[ObjectPrintable]: hashcode { $ignore$ }
 		{
@@ -185,6 +189,7 @@ namespace ObjectPrinter.Specs
 			Dictionary : {NULL}
 			Hashtable : {NULL}
 			NVC : {NULL}
+			SomeEnumMember : SomeEnum.Enum22
 		}
 	}
 	Dictionary : [Dictionary`2]: hashcode { $ignore$ }
@@ -200,6 +205,7 @@ namespace ObjectPrinter.Specs
 			Dictionary : {NULL}
 			Hashtable : {NULL}
 			NVC : {NULL}
+			SomeEnumMember : SomeEnum.Enum22
 		}
 		33 : [ObjectPrintable]: hashcode { $ignore$ }
 		{
@@ -215,6 +221,7 @@ namespace ObjectPrinter.Specs
 			Dictionary : {NULL}
 			Hashtable : {NULL}
 			NVC : {NULL}
+			SomeEnumMember : SomeEnum.Enum22
 		}
 	}
 	Hashtable : [Hashtable]: hashcode { $ignore$ }
@@ -230,6 +237,7 @@ namespace ObjectPrinter.Specs
 			Dictionary : {NULL}
 			Hashtable : {NULL}
 			NVC : {NULL}
+			SomeEnumMember : SomeEnum.Enum22
 		}
 		33 : [ObjectPrintable]: hashcode { $ignore$ }
 		{
@@ -245,6 +253,7 @@ namespace ObjectPrinter.Specs
 			Dictionary : {NULL}
 			Hashtable : {NULL}
 			NVC : {NULL}
+			SomeEnumMember : SomeEnum.Enum22
 		}
 	}
 	NVC : [NameValueCollection]: hashcode { $ignore$ }
@@ -255,6 +264,7 @@ namespace ObjectPrinter.Specs
 			and returns
 		boringString : i'm a bore
 	}
+	SomeEnumMember : SomeEnum.Enum22
 }";
 			shouldBeSame(expected, parent);
         }
@@ -340,6 +350,8 @@ namespace ObjectPrinter.Specs
 
 		public class ObjectPrintable
 		{
+            public enum SomeEnum{Enum1,Enum22,Enum333};
+
 			private readonly string _customToString;
 			public string String { get; set; }
 			public int Id { get; set; }
@@ -350,10 +362,14 @@ namespace ObjectPrinter.Specs
             public Dictionary<int, ObjectPrintable> Dictionary { get; set; }
             public Hashtable Hashtable { get; set; }
             public NameValueCollection NVC { get; set; }
+            public SomeEnum SomeEnumMember { get; set; }
 
-			public ObjectPrintable() { }
+            public ObjectPrintable()
+            {
+                SomeEnumMember = SomeEnum.Enum22;
+            }
 
-			public ObjectPrintable(string customToString)
+			public ObjectPrintable(string customToString) : this()
 			{
 				_customToString = customToString;
 			}
