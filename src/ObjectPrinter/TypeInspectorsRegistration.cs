@@ -19,17 +19,10 @@ namespace ObjectPrinter
 
         private static readonly ITypeInspector DefaultEnumTypeInspector = new EnumTypeInspector();
         private static readonly ITypeInspector DefaultExceptionTypeInspector = new ExceptionTypeInspector();
-        private static readonly ITypeInspector[] DefaultEnumerableInspectors = new ITypeInspector[]
-            {
-                new XmlNodeTypeInspector(), 
-                new DictionaryTypeInspector(), 
-                new NameValueCollectionTypeInspector(), 
-                new EnumerableTypeInspector()
-            };
 
         private ITypeInspector _enumTypeInspector = DefaultEnumTypeInspector;
         private ITypeInspector _exceptionTypeInspector = DefaultExceptionTypeInspector;
-        private ITypeInspector[] _enumerableTypeInspectors = DefaultEnumerableInspectors;
+        private ITypeInspector[] _enumerableTypeInspectors = GetDefaultEnumerableInspectors();
 
         private bool _inspectAllMsTypes;
 
@@ -92,7 +85,7 @@ namespace ObjectPrinter
             yield return _enumTypeInspector ?? DefaultEnumTypeInspector;
             yield return _exceptionTypeInspector ?? DefaultExceptionTypeInspector;
 
-            foreach (var inspector in _enumerableTypeInspectors ?? DefaultEnumerableInspectors)
+            foreach (var inspector in _enumerableTypeInspectors ?? GetDefaultEnumerableInspectors())
             {
                 yield return inspector;
             }
@@ -108,6 +101,17 @@ namespace ObjectPrinter
             }
 
             yield return Config.Inspectors.CatchAllTypeInspector;
+        }
+
+        private static ITypeInspector[] GetDefaultEnumerableInspectors()
+        {
+            return new ITypeInspector[]
+                {
+                    new XmlNodeTypeInspector(),
+                    new DictionaryTypeInspector(),
+                    new NameValueCollectionTypeInspector(),
+                    new EnumerableTypeInspector()
+                };
         }
     }
 }
