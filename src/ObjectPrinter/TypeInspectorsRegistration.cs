@@ -22,7 +22,7 @@ namespace ObjectPrinter
 
         private ITypeInspector _enumTypeInspector = DefaultEnumTypeInspector;
         private ITypeInspector _exceptionTypeInspector = DefaultExceptionTypeInspector;
-        private ITypeInspector[] _enumerableTypeInspectors = GetDefaultEnumerableInspectors();
+        private ITypeInspector[] _enumerableTypeInspectors;
 
         private bool _inspectAllMsTypes;
 
