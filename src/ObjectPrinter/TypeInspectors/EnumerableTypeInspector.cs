@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ObjectPrinter.TypeInspectors
 {
@@ -10,6 +9,16 @@ namespace ObjectPrinter.TypeInspectors
     /// </summary>
     public class EnumerableTypeInspector : ITypeInspector
     {
+        /// <summary>
+        /// when true, Count will be the first property printed
+        /// </summary>
+        public bool IncludeCountsForCollections { get; set; }
+
+        public EnumerableTypeInspector()
+        {
+            IncludeCountsForCollections = Config.Inspectors.IncludeCountsForCollections;
+        }
+
         ///<summary></summary>
         public bool ShouldInspect(object objectToInspect, Type typeOfObjectToInspect)
         {
@@ -19,8 +28,20 @@ namespace ObjectPrinter.TypeInspectors
         ///<summary></summary>
         public IEnumerable<ObjectInfo> GetMemberList(object objectToInspect, Type typeOfObjectToInspect)
         {
-            return from Object obj in (IEnumerable)objectToInspect
-                   select new ObjectInfo(obj.RemoveNonSerializableWrapper());
+            if (IncludeCountsForCollections)
+            {
+                var collection = objectToInspect as ICollection;
+                if (collection != null && collection.Count > 0)
+                {
+                    yield return new ObjectInfo("Count", collection.Count);
+                }
+            }
+
+            var enumerable = (IEnumerable) objectToInspect;
+            foreach (var obj in enumerable)
+            {
+                yield return new ObjectInfo(obj.RemoveNonSerializableWrapper());
+            }
         }
     }
 }
