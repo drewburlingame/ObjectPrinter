@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ObjectPrinter.TypeInspectors
 {
@@ -14,6 +13,16 @@ namespace ObjectPrinter.TypeInspectors
     /// </summary>
     public class DictionaryTypeInspector : ITypeInspector
     {
+        /// <summary>
+        /// when true, Count will be the first property printed
+        /// </summary>
+        public bool IncludeCountsForCollections { get; set; }
+
+        public DictionaryTypeInspector()
+        {
+            IncludeCountsForCollections = Config.Inspectors.IncludeCountsForCollections;
+        }
+
         ///<summary></summary>
         public bool ShouldInspect(object objectToInspect, Type typeOfObjectToInspect)
         {
@@ -23,7 +32,12 @@ namespace ObjectPrinter.TypeInspectors
         ///<summary></summary>
         public IEnumerable<ObjectInfo> GetMemberList(object objectToInspect, Type typeOfObjectToInspect)
         {
-            foreach (DictionaryEntry entry in ((IDictionary) objectToInspect))
+            var dictionary = (IDictionary) objectToInspect;
+            if (IncludeCountsForCollections && dictionary.Count > 0)
+            {
+                yield return new ObjectInfo("Count", dictionary.Count);
+            }
+            foreach (DictionaryEntry entry in dictionary)
             {
                 yield return new ObjectInfo(entry.Key.ToString(), entry.Value.RemoveNonSerializableWrapper());
             }

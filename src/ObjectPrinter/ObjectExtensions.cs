@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using ObjectPrinter.Utilties;
 
 namespace ObjectPrinter
@@ -46,6 +47,16 @@ namespace ObjectPrinter
             }
 
             return wrapper.Context;
+        }
+
+        internal static IEnumerable<T> ToEnumerable<T>(object item)
+        {
+            yield return (T)item;
+        }
+
+        internal static IEnumerable<T> ToEnumerable<T>(T item)
+        {
+            yield return item;
         }
 	}
 }

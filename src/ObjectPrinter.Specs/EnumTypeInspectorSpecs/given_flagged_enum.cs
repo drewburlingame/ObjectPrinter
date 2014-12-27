@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentAssertions;
 using Machine.Specifications;
 using ObjectPrinter.TypeInspectors;
 
@@ -24,11 +25,11 @@ namespace ObjectPrinter.Specs.EnumTypeInspectorSpecs
 		             		Console.Out.WriteLine(_output);
 		             	};
 
-		It should_print_Val1 = () => _output.ShouldContain("Val1");
-		It should_print_Val2 = () => _output.ShouldContain("Val2");
-		It should_not_print_Val3 = () => _output.ShouldNotContain("Val3");
-		It should_not_print_namespace = () => _output.ShouldNotContain("ObjectPrinter.Specs");
-		It should_print_enum_type_name = () => _output.ShouldContain("ImFlagged");
+		It should_print_Val1 = () => _output.Should().Contain("Val1");
+        It should_print_Val2 = () => _output.Should().Contain("Val2");
+        It should_not_print_Val3 = () => _output.Should().NotContain("Val3");
+        It should_not_print_namespace = () => _output.Should().NotContain("ObjectPrinter.Specs");
+        It should_print_enum_type_name = () => _output.Should().Contain("ImFlagged");
 
 		static ImFlagged _flagged;
 		static string _output;

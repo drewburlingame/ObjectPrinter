@@ -15,6 +15,12 @@ namespace ObjectPrinter.Specs
     [TestFixture]
 	public class ObjectPrinterSmokeTests
     {
+        [TearDown]
+        public void Teardown()
+        {
+            Config.Inspectors.IncludeCountsForCollections = false;
+        }
+
 	    [Test]
 	    public void SmokeTest_XmlNode_should_return_inner_text()
         {
@@ -99,47 +105,6 @@ namespace ObjectPrinter.Specs
         [Test]
 		public void SmokeTest_general_use_case_including_recursion()
         {
-            var stringWithReturns = "this is\r\na string\n\twith tabs\nand returns";
-            var boringString = "i'm a bore";
-
-		    var child1 = new ObjectPrintable
-							{
-								String = boringString,
-								Id = 17,
-							};
-		    var child2 = new ObjectPrintable
-							{
-								String = stringWithReturns,
-								Id = 33
-							};
-
-		    var parent = new ObjectPrintable("Whos your daddy?")
-		        {
-		            String = "Parent",
-		            Id = 100,
-		            Child = child1,
-		            Array = new[] {child1, child2},
-		            Dictionary = new Dictionary<int, ObjectPrintable>
-		                {
-		                    {child1.Id, child1},
-		                    {child2.Id, child2}
-		                },
-		            Hashtable = new Hashtable
-		                {
-		                    {child1.Id, child1},
-		                    {child2.Id, child2}
-		                },
-		            NVC = new NameValueCollection
-		                {
-
-		                    {"stringWithReturns", stringWithReturns},
-		                    {"boringString", boringString}
-		                }
-		        };
-
-			child1.Parent = parent;
-			child2.Parent = parent;
-
             string expected = @"[ObjectPrintable]: hashcode { $ignore$ }
 {
 	ToString() : Whos your daddy?
@@ -266,7 +231,189 @@ namespace ObjectPrinter.Specs
 	}
 	SomeEnumMember : SomeEnum.Enum22
 }";
-			shouldBeSame(expected, parent);
+
+            shouldBeSame(expected, build_general_use_case_including_recursion());
+        }
+
+        [Test]
+        public void SmokeTest_general_use_case_including_recursion_and_counts_for_collections()
+        {
+            Config.Inspectors.IncludeCountsForCollections = true;
+            string expected = @"[ObjectPrintable]: hashcode { $ignore$ }
+{
+	ToString() : Whos your daddy?
+	String : Parent
+	Id : 100
+	Uri : {NULL}
+	Child : [ObjectPrintable]: hashcode { $ignore$ }
+	{
+		String : i'm a bore
+		Id : 17
+		Uri : {NULL}
+		Child : {NULL}
+		Parent : avoid circular loop for this [ObjectPrintable]: hashcode { $ignore$ }
+		Array : {NULL}
+		Dictionary : {NULL}
+		Hashtable : {NULL}
+		NVC : {NULL}
+		SomeEnumMember : SomeEnum.Enum22
+	}
+	Parent : {NULL}
+	Array : [ObjectPrintable[]]: hashcode { $ignore$ }
+	{
+		Count : 2
+		[ObjectPrintable]: hashcode { $ignore$ }
+		{
+			String : i'm a bore
+			Id : 17
+			Uri : {NULL}
+			Child : {NULL}
+			Parent : avoid circular loop for this [ObjectPrintable]: hashcode { $ignore$ }
+			Array : {NULL}
+			Dictionary : {NULL}
+			Hashtable : {NULL}
+			NVC : {NULL}
+			SomeEnumMember : SomeEnum.Enum22
+		}
+		[ObjectPrintable]: hashcode { $ignore$ }
+		{
+			String : this is
+				a string
+					with tabs
+				and returns
+			Id : 33
+			Uri : {NULL}
+			Child : {NULL}
+			Parent : avoid circular loop for this [ObjectPrintable]: hashcode { $ignore$ }
+			Array : {NULL}
+			Dictionary : {NULL}
+			Hashtable : {NULL}
+			NVC : {NULL}
+			SomeEnumMember : SomeEnum.Enum22
+		}
+	}
+	Dictionary : [Dictionary`2]: hashcode { $ignore$ }
+	{
+		Count : 2
+		17 : [ObjectPrintable]: hashcode { $ignore$ }
+		{
+			String : i'm a bore
+			Id : 17
+			Uri : {NULL}
+			Child : {NULL}
+			Parent : avoid circular loop for this [ObjectPrintable]: hashcode { $ignore$ }
+			Array : {NULL}
+			Dictionary : {NULL}
+			Hashtable : {NULL}
+			NVC : {NULL}
+			SomeEnumMember : SomeEnum.Enum22
+		}
+		33 : [ObjectPrintable]: hashcode { $ignore$ }
+		{
+			String : this is
+				a string
+					with tabs
+				and returns
+			Id : 33
+			Uri : {NULL}
+			Child : {NULL}
+			Parent : avoid circular loop for this [ObjectPrintable]: hashcode { $ignore$ }
+			Array : {NULL}
+			Dictionary : {NULL}
+			Hashtable : {NULL}
+			NVC : {NULL}
+			SomeEnumMember : SomeEnum.Enum22
+		}
+	}
+	Hashtable : [Hashtable]: hashcode { $ignore$ }
+	{
+		Count : 2
+		17 : [ObjectPrintable]: hashcode { $ignore$ }
+		{
+			String : i'm a bore
+			Id : 17
+			Uri : {NULL}
+			Child : {NULL}
+			Parent : avoid circular loop for this [ObjectPrintable]: hashcode { $ignore$ }
+			Array : {NULL}
+			Dictionary : {NULL}
+			Hashtable : {NULL}
+			NVC : {NULL}
+			SomeEnumMember : SomeEnum.Enum22
+		}
+		33 : [ObjectPrintable]: hashcode { $ignore$ }
+		{
+			String : this is
+				a string
+					with tabs
+				and returns
+			Id : 33
+			Uri : {NULL}
+			Child : {NULL}
+			Parent : avoid circular loop for this [ObjectPrintable]: hashcode { $ignore$ }
+			Array : {NULL}
+			Dictionary : {NULL}
+			Hashtable : {NULL}
+			NVC : {NULL}
+			SomeEnumMember : SomeEnum.Enum22
+		}
+	}
+	NVC : [NameValueCollection]: hashcode { $ignore$ }
+	{
+		Count : 2
+		stringWithReturns : this is
+			a string
+				with tabs
+			and returns
+		boringString : i'm a bore
+	}
+	SomeEnumMember : SomeEnum.Enum22
+}";
+            shouldBeSame(expected, build_general_use_case_including_recursion());
+        }
+
+        private static ObjectPrintable build_general_use_case_including_recursion()
+        {
+            var stringWithReturns = "this is\r\na string\n\twith tabs\nand returns";
+            var boringString = "i'm a bore";
+
+            var child1 = new ObjectPrintable
+                {
+                    String = boringString,
+                    Id = 17,
+                };
+            var child2 = new ObjectPrintable
+                {
+                    String = stringWithReturns,
+                    Id = 33
+                };
+
+            var parent = new ObjectPrintable("Whos your daddy?")
+                {
+                    String = "Parent",
+                    Id = 100,
+                    Child = child1,
+                    Array = new[] {child1, child2},
+                    Dictionary = new Dictionary<int, ObjectPrintable>
+                        {
+                            {child1.Id, child1},
+                            {child2.Id, child2}
+                        },
+                    Hashtable = new Hashtable
+                        {
+                            {child1.Id, child1},
+                            {child2.Id, child2}
+                        },
+                    NVC = new NameValueCollection
+                        {
+                            {"stringWithReturns", stringWithReturns},
+                            {"boringString", boringString}
+                        }
+                };
+
+            child1.Parent = parent;
+            child2.Parent = parent;
+            return parent;
         }
 
         [Test]
@@ -342,8 +489,10 @@ namespace ObjectPrinter.Specs
             //actual = actual.Replace(Environment.NewLine, "_n").Replace("\t", "_t");
 
             //Console.Out.WriteLine("lengths: expected={0} actual={1}", expected.Length, actual.Length);
-            //Console.Out.WriteLine(expected);
-            //Console.Out.WriteLine(actual);
+            Console.Out.WriteLine("EXPECTED:");
+            Console.Out.WriteLine(expected);
+            Console.Out.WriteLine("ACTUAL:");
+            Console.Out.WriteLine(actual);
 
             actual.Should().Be(expected);
         }

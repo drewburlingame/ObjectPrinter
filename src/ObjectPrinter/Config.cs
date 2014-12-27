@@ -17,6 +17,7 @@ namespace ObjectPrinter
         public static class Inspectors
         {
             private static ITypeInspector _catchAllTypeInspector = new TypeInspectors.InspectAllTypeInspector();
+            private static bool _includeCountsForCollections;
             private static readonly TypeInspectorsRegistration DefaultRegistration;
             private static TypeInspectorsRegistration _userProvidedRegistration;
             internal static IEnumerable<ITypeInspector> DefaultInspectors;
@@ -52,6 +53,22 @@ namespace ObjectPrinter
                     if (value == null) throw new ArgumentNullException("value");
                     _userProvidedRegistration = value;
                     ReloadInspectors();
+                }
+            }
+
+            /// <summary>
+            /// The default setting for including counts for collections
+            /// </summary>
+            public static bool IncludeCountsForCollections
+            {
+                get { return _includeCountsForCollections; }
+                set
+                {
+                    if(_includeCountsForCollections != value)
+                    {
+                        _includeCountsForCollections = value;
+                        ReloadInspectors();
+                    }
                 }
             }
 
