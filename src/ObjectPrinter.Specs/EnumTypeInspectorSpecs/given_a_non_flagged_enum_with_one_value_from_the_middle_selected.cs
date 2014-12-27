@@ -1,4 +1,5 @@
 using System;
+using FluentAssertions;
 using Machine.Specifications;
 using ObjectPrinter.TypeInspectors;
 
@@ -23,7 +24,7 @@ namespace ObjectPrinter.Specs.EnumTypeInspectorSpecs
 		             		Console.Out.WriteLine(_output);
 		             	};
 
-		It should_print_ImNotFlaggedDotVal2 = () => _output.ShouldEqual("ImNotFlagged.Val2");
+		It should_print_ImNotFlaggedDotVal2 = () => _output.Should().Be("ImNotFlagged.Val2");
 
 		static ImNotFlagged _value;
 		static string _output;
