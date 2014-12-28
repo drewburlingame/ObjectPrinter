@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>ObjectPrinter-Log4Net-1.2.13</id>
+        <version>$version$</version>
+        <title>ObjectPrinter-Log4Net-1.2.13</title>
+        <authors>Drew Burlingame</authors>
+        <owners>Drew Burlingame</owners>
+        <projectUrl>https://github.com/drewburlingame/ObjectPrinter</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Provides an object renderer to integrate with log4net to dump exceptions (or any/all object types) using the ObjectPrinter.
+
+Also provides a log4net type inspector to prevent prevent dumping log4net objects that should be converted to strings.</description>
+        <summary>object renderer for log4net</summary>
+        <tags>.net debug dump exception log</tags>
+        <dependencies>
+            <dependency id="log4net" version="2.0.2" />
+            <dependency id="ObjectPrinter" version="1.1.1" />
+        </dependencies>
+    </metadata>
+  <files>
+    <file src="bin\Release\ObjectPrinter.Log4Net.v1213.dll" target="lib\Net40" />
+    <file src="bin\Release\ObjectPrinter.Log4Net.v1213.xml" target="lib\Net40" />
+  </files>
+</package>
