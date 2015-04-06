@@ -14,7 +14,7 @@ Also provides a log4net type inspector to prevent prevent dumping log4net object
         <summary>object renderer for log4net</summary>
         <tags>.net debug dump exception log</tags>
         <dependencies>
-            <dependency id="log4net" version="2.0.2" />
+            <dependency id="log4net" version="2.0.3" />
             <dependency id="ObjectPrinter" version="1.1.1" />
         </dependencies>
     </metadata>
