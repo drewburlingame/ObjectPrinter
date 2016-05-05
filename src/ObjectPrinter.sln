@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectPrinter", "ObjectPrinter\ObjectPrinter.csproj", "{17FAE841-474C-4B3B-89A1-13BC44364171}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectPrinter.Specs", "ObjectPrinter.Specs\ObjectPrinter.Specs.csproj", "{F7C71361-C26C-40AA-AF7E-F39740759553}"
@@ -19,6 +21,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectPrinter.Log4Net.v1210", "ObjectPrinter.Log4Net.v1210\ObjectPrinter.Log4Net.v1210.csproj", "{A013DAEF-5FD0-4241-81AE-724278EB5560}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectPrinter.Log4Net.v1213", "ObjectPrinter.Log4Net.v1213\ObjectPrinter.Log4Net.v1213.csproj", "{EB201FFD-B9A1-4E80-BADA-CFDAC0C985E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectPrinter.Log4Net.v1215", "ObjectPrinter.Log4Net.v1215\ObjectPrinter.Log4Net.v1215.csproj", "{3957F663-6E98-4BBA-87AC-9B24EA042B25}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +54,10 @@ Global
 		{EB201FFD-B9A1-4E80-BADA-CFDAC0C985E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB201FFD-B9A1-4E80-BADA-CFDAC0C985E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB201FFD-B9A1-4E80-BADA-CFDAC0C985E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3957F663-6E98-4BBA-87AC-9B24EA042B25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3957F663-6E98-4BBA-87AC-9B24EA042B25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3957F663-6E98-4BBA-87AC-9B24EA042B25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3957F663-6E98-4BBA-87AC-9B24EA042B25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
