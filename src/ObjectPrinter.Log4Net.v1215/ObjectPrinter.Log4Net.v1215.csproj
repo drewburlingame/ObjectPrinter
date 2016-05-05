@@ -7,8 +7,8 @@
     <ProjectGuid>{3957F663-6E98-4BBA-87AC-9B24EA042B25}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ObjectPrinter.Log4Net.v1213</RootNamespace>
-    <AssemblyName>ObjectPrinter.Log4Net.v1213</AssemblyName>
+    <RootNamespace>ObjectPrinter.Log4Net.v1215</RootNamespace>
+    <AssemblyName>ObjectPrinter.Log4Net.v1215</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -30,7 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\ObjectPrinter.Log4Net.v1213.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\ObjectPrinter.Log4Net.v1215.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
